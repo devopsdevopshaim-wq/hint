@@ -1,0 +1,2714 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לוח שנה עברי מדויק - עם פרשות וחגים</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Suez+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #283593;
+            --accent: #5d4037;
+            --gold: #d4af37;
+            --silver: #c0c0c0;
+            --light: #f5f5f5;
+            --dark: #121212;
+            --shabbat: #1a237e;
+            --holiday: #b71c1c;
+            --today: #1b5e20;
+            --rosh-hodesh: #4a148c;
+            --parsha: #0d47a1;
+            --fast: #e65100;
+            --parchment: #f8f5e9;
+            --torah-scroll: #8b5a2b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'David Libre', serif;
+            background: linear-gradient(135deg, #0c2461 0%, #1a237e 50%, #283593 100%);
+            color: #333;
+            direction: rtl;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(192, 192, 192, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .torah-border {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 3px solid var(--torah-scroll);
+            border-radius: 15px;
+            pointer-events: none;
+            z-index: 1;
+            box-shadow: 0 0 30px rgba(139, 90, 43, 0.3),
+                        inset 0 0 30px rgba(139, 90, 43, 0.2);
+        }
+        
+        .torah-handle {
+            position: absolute;
+            width: 40px;
+            height: 120px;
+            background: linear-gradient(90deg, #5d4037, #8b5a2b, #5d4037);
+            border-radius: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+        
+        .torah-handle.left {
+            left: -20px;
+        }
+        
+        .torah-handle.right {
+            right: -20px;
+        }
+        
+        .torah-handle::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 100px;
+            background: linear-gradient(90deg, #d4af37, #ffd700, #d4af37);
+            border-radius: 5px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d47a1 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--gold);
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--silver), var(--gold));
+        }
+        
+        header h1 {
+            font-family: 'Suez One', serif;
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+        
+        header h1::before,
+        header h1::after {
+            content: '✡';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--gold);
+        }
+        
+        header h1::before {
+            right: -10px;
+        }
+        
+        header h1::after {
+            left: -10px;
+        }
+        
+        header p {
+            font-size: 1.4rem;
+            opacity: 0.95;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .today-info {
+            background: var(--parchment);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .today-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--silver), var(--gold));
+        }
+        
+        .today-date {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .today-date div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .today-date i {
+            color: var(--gold);
+            font-size: 1.5rem;
+        }
+        
+        .today-parsha {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 18px 35px;
+            border-radius: 35px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.4s;
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .today-parsha::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+        }
+        
+        .today-parsha:hover::before {
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+        
+        .today-parsha:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: var(--gold);
+        }
+        
+        .controls {
+            background: var(--parchment);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: 2px solid var(--accent);
+        }
+        
+        .year-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .year-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .year-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .year-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .year-btn:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+        
+        .current-year {
+            font-family: 'Suez One', serif;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            min-width: 400px;
+            text-align: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, var(--parchment) 0%, #e8e4d9 100%);
+            border-radius: 15px;
+            border: 3px solid var(--gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .current-year::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(212, 175, 55, 0.1) 50%, transparent 60%);
+            animation: shine 3s infinite linear;
+        }
+        
+        .year-input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .year-input {
+            font-family: 'David Libre', serif;
+            padding: 15px 20px;
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            font-size: 1.3rem;
+            width: 150px;
+            text-align: center;
+            background: var(--parchment);
+            color: var(--primary);
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .year-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(26, 35, 126, 0.3);
+        }
+        
+        .go-btn {
+            background: linear-gradient(135deg, var(--gold) 0%, #b8941f 100%);
+            color: var(--primary);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Suez One', serif;
+        }
+        
+        .go-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #b8941f 0%, var(--gold) 100%);
+            color: white;
+        }
+        
+        .view-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .view-btn {
+            padding: 18px 35px;
+            border: 2px solid var(--gold);
+            background: var(--parchment);
+            color: var(--primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Suez One', serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .view-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(212, 175, 55, 0.1) 50%, transparent 60%);
+            animation: shine 3s infinite linear;
+            opacity: 0;
+        }
+        
+        .view-btn.active::before {
+            opacity: 1;
+        }
+        
+        .view-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border-color: var(--primary);
+        }
+        
+        .view-btn:hover:not(.active) {
+            background: linear-gradient(135deg, #f0ede4 0%, #e8e4d9 100%);
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .calendar-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .month-card {
+            background: var(--parchment);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.4s;
+            position: relative;
+            border: 2px solid var(--accent);
+        }
+        
+        .month-card:hover {
+            transform: translateY(-15px) rotate(1deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .month-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d47a1 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Suez One', serif;
+            border-bottom: 3px solid var(--gold);
+        }
+        
+        .month-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+            animation: shine 3s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--secondary);
+            padding: 15px 8px;
+            font-weight: bold;
+            color: white;
+            border-bottom: 3px solid var(--gold);
+            font-family: 'Suez One', serif;
+        }
+        
+        .weekday {
+            text-align: center;
+            padding: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8e4d9 0%, #d8d4c9 100%);
+        }
+        
+        .day-cell {
+            background: white;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: all 0.3s;
+            border: 1px solid #e0d6c0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .day-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 40%, rgba(212, 175, 55, 0.05) 50%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .day-cell:hover::before {
+            opacity: 1;
+        }
+        
+        .day-cell:hover {
+            background: #fffaf0;
+            transform: scale(1.08);
+            z-index: 10;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            border-color: var(--gold);
+        }
+        
+        .day-cell.today {
+            background: linear-gradient(135deg, var(--today) 0%, #2e7d32 100%);
+            color: white;
+            border: 3px solid var(--gold);
+            animation: pulse 2s infinite;
+            z-index: 5;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(27, 94, 32, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(27, 94, 32, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(27, 94, 32, 0); }
+        }
+        
+        .day-cell.shabbat {
+            background: linear-gradient(135deg, #e8e8ff 0%, #d0d0ff 100%);
+            border-right: 4px solid var(--shabbat);
+        }
+        
+        .day-cell.holiday {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 4px solid var(--holiday);
+        }
+        
+        .day-cell.rosh-hodesh {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-bottom: 4px solid var(--rosh-hodesh);
+        }
+        
+        .day-cell.friday {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-top: 4px solid var(--parsha);
+        }
+        
+        .day-cell.fast {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid var(--fast);
+        }
+        
+        .gregorian-date {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
+            color: var(--primary);
+        }
+        
+        .hebrew-date {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .day-info {
+            font-size: 0.8rem;
+            margin-top: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .parsha-indicator {
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--parsha) 0%, #1565c0 100%);
+            padding: 5px 8px;
+            border-radius: 15px;
+            margin-top: 5px;
+            display: inline-block;
+            font-size: 0.75rem;
+            border: 1px solid var(--gold);
+        }
+        
+        .holiday-indicator {
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--holiday) 0%, #c62828 100%);
+            padding: 5px 8px;
+            border-radius: 15px;
+            margin-top: 5px;
+            display: inline-block;
+            font-size: 0.75rem;
+            border: 1px solid var(--gold);
+        }
+        
+        .rosh-hodesh-indicator {
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--rosh-hodesh) 0%, #7b1fa2 100%);
+            padding: 5px 8px;
+            border-radius: 15px;
+            margin-top: 5px;
+            display: inline-block;
+            font-size: 0.75rem;
+            border: 1px solid var(--gold);
+        }
+        
+        .fast-indicator {
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--fast) 0%, #ef6c00 100%);
+            padding: 5px 8px;
+            border-radius: 15px;
+            margin-top: 5px;
+            display: inline-block;
+            font-size: 0.75rem;
+            border: 1px solid var(--gold);
+        }
+        
+        .holidays-view, .parshiot-view {
+            background: var(--parchment);
+            border-radius: 15px;
+            padding: 35px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--accent);
+            display: none;
+        }
+        
+        .holidays-view.active, .parshiot-view.active {
+            display: block;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .holidays-view h2, .parshiot-view h2 {
+            font-family: 'Suez One', serif;
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .holidays-view h2::after, .parshiot-view h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--silver), var(--gold));
+        }
+        
+        .holidays-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .holiday-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 8px solid var(--holiday);
+            transition: all 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0d6c0;
+        }
+        
+        .holiday-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+            animation: shine 3s infinite linear;
+        }
+        
+        .holiday-card:hover {
+            transform: translateX(-10px) translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            border-left-width: 12px;
+        }
+        
+        .holiday-card.rosh-hodesh {
+            border-left-color: var(--rosh-hodesh);
+        }
+        
+        .holiday-card.fast {
+            border-left-color: var(--fast);
+        }
+        
+        .holiday-title {
+            font-family: 'Suez One', serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .holiday-date {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .holiday-desc {
+            color: #555;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        
+        .parsha-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .parsha-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 8px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0d6c0;
+        }
+        
+        .parsha-card:hover {
+            transform: translateX(-10px) translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            border-left-color: var(--parsha);
+            border-left-width: 12px;
+        }
+        
+        .parsha-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+            animation: shine 3s infinite linear;
+        }
+        
+        .parsha-title {
+            font-family: 'Suez One', serif;
+            font-weight: bold;
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .parsha-date {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .parsha-summary {
+            color: #555;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.4s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .day-modal-content, .parsha-modal-content {
+            background: var(--parchment);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            animation: slideUp 0.6s ease-out;
+            border: 3px solid var(--gold);
+        }
+        
+        .parsha-modal-content {
+            max-width: 1000px;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid var(--gold);
+        }
+        
+        .modal-title {
+            font-family: 'Suez One', serif;
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .close-modal {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid var(--gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all 0.4s;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg) scale(1.1);
+        }
+        
+        .modal-body {
+            padding: 35px;
+        }
+        
+        .day-info-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f2e9 0%, #e8e4d9 100%);
+            border-radius: 15px;
+            border: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .info-label {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .info-value {
+            font-family: 'Suez One', serif;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.4rem;
+        }
+        
+        .day-details {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            border-left: 8px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .detail-title {
+            font-family: 'Suez One', serif;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .detail-content {
+            line-height: 1.9;
+            color: #444;
+            font-size: 1.1rem;
+        }
+        
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+            font-family: 'Suez One', serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            animation: shine 3s infinite linear;
+            opacity: 0;
+        }
+        
+        .action-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+        
+        .action-btn.parsha-btn {
+            background: linear-gradient(135deg, var(--parsha) 0%, #0d47a1 100%);
+        }
+        
+        .action-btn.holiday-btn {
+            background: linear-gradient(135deg, var(--holiday) 0%, #c62828 100%);
+        }
+        
+        .action-btn.fast-btn {
+            background: linear-gradient(135deg, var(--fast) 0%, #ef6c00 100%);
+        }
+        
+        .parsha-info {
+            margin-bottom: 30px;
+        }
+        
+        .parsha-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            border: 2px solid var(--secondary);
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .meta-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .meta-value {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .parsha-section {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent);
+            transition: all 0.3s;
+        }
+        
+        .parsha-section:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-content {
+            line-height: 1.8;
+            color: #444;
+            font-size: 1.05rem;
+        }
+        
+        .zohar-section {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-right: 5px solid var(--accent);
+        }
+        
+        .commentary-section {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d1e7f3 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-right: 5px solid var(--parsha);
+        }
+        
+        .additional-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-right: 5px solid var(--rosh-hodesh);
+        }
+        
+        .source-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0,0,0,0.1);
+            color: #666;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+        
+        .verses-list {
+            margin-top: 15px;
+            padding-right: 20px;
+        }
+        
+        .verse-item {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            border-right: 3px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .verse-item:hover {
+            transform: translateX(-5px);
+            border-right-color: var(--accent);
+        }
+        
+        .parsha-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .parsha-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .parsha-nav-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, #0d47a1 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--silver), var(--gold));
+        }
+        
+        .decoration {
+            position: fixed;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star-decoration {
+            position: fixed;
+            color: var(--gold);
+            opacity: 0.1;
+            font-size: 4rem;
+            animation: float 10s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .star-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .star-2 { top: 20%; right: 15%; animation-delay: 1s; }
+        .star-3 { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .star-4 { bottom: 20%; right: 10%; animation-delay: 3s; }
+        
+        @media (max-width: 1200px) {
+            .calendar-view {
+                grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-view {
+                grid-template-columns: 1fr;
+            }
+            
+            .today-info {
+                flex-direction: column;
+                gap: 25px;
+                text-align: center;
+            }
+            
+            .year-controls {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            .current-year {
+                min-width: 280px;
+                font-size: 2rem;
+                padding: 15px 20px;
+            }
+            
+            .year-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .view-controls {
+                flex-direction: column;
+            }
+            
+            .view-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .holidays-grid,
+            .parsha-list {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            header p {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 25px 15px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .current-year {
+                min-width: 250px;
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- כוכבי קישוט -->
+    <div class="star-decoration star-1">✡</div>
+    <div class="star-decoration star-2">✡</div>
+    <div class="star-decoration star-3">✡</div>
+    <div class="star-decoration star-4">✡</div>
+    
+    <div class="container">
+        <!-- ידיות ספר תורה -->
+        <div class="torah-handle left"></div>
+        <div class="torah-handle right"></div>
+        <div class="torah-border"></div>
+        
+        <header>
+            <h1><i class="fas fa-star-of-david"></i> לוח שנה עברי מושלם <i class="fas fa-torah"></i></h1>
+            <p>לוח שנה עברי מדויק עם פרשות השבוע, חגים ומועדים | תאריכים לפי הלוח העברי והלועזי</p>
+        </header>
+        
+        <div class="today-info">
+            <div class="today-date">
+                <div><i class="fas fa-calendar-alt"></i> <span id="currentHebrewDate">טוען...</span></div>
+                <div><i class="fas fa-calendar"></i> <span id="currentGregorianDate">טוען...</span></div>
+            </div>
+            <div class="today-parsha" id="today-parsha">
+                <i class="fas fa-torah"></i> פרשת השבוע: טוען...
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="year-controls">
+                <button class="year-btn" onclick="changeYear(-1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="current-year" id="yearDisplay">שנת תשפ"ו (ספטמבר 2025 - ספטמבר 2026)</div>
+                <button class="year-btn" onclick="changeYear(1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            
+            <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                <div class="year-input-group">
+                    <input type="number" class="year-input" id="yearInput" value="5786" min="5700" max="5900">
+                    <button class="go-btn" onclick="goToYear()">
+                        <i class="fas fa-arrow-right"></i> מעבר לשנה
+                    </button>
+                </div>
+            </div>
+            
+            <div class="view-controls" style="margin-top: 25px;">
+                <button class="view-btn active" onclick="setView('calendar')">
+                    <i class="fas fa-calendar-alt"></i> לוח שנה
+                </button>
+                <button class="view-btn" onclick="setView('holidays')">
+                    <i class="fas fa-star-of-david"></i> חגים ומועדים
+                </button>
+                <button class="view-btn" onclick="setView('parshiot')">
+                    <i class="fas fa-scroll"></i> כל הפרשות
+                </button>
+            </div>
+        </div>
+        
+        <div id="calendar-view" class="calendar-view"></div>
+        
+        <div id="holidays-view" class="holidays-view">
+            <h2><i class="fas fa-star-of-david"></i> חגים ומועדים לשנת <span id="holiday-year">תשפ"ו</span></h2>
+            <div class="holidays-grid" id="holidays-grid"></div>
+        </div>
+        
+        <div id="parshiot-view" class="parshiot-view">
+            <h2><i class="fas fa-scroll"></i> כל פרשות השבוע לשנת <span id="parsha-year">תשפ"ו</span></h2>
+            <div class="parsha-list" id="parshiot-grid"></div>
+        </div>
+    </div>
+    
+    <div class="modal" id="day-modal">
+        <div class="day-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-calendar-day"></i> <span id="day-modal-title">פרטי היום</span>
+                </div>
+                <button class="close-modal" onclick="closeDayModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="day-modal-body"></div>
+        </div>
+    </div>
+    
+    <div class="modal" id="parsha-modal">
+        <div class="parsha-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-scroll"></i> <span id="parsha-modal-title">פרשה</span>
+                </div>
+                <button class="close-modal" onclick="closeParshaModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="parsha-modal-body"></div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 לוח שנה עברי עם פרשות וחגים | תאריכים מדויקים לפי הלוח העברי המסורתי</p>
+        <p style="margin-top: 10px; opacity: 0.9; font-size: 0.95rem;">בס"ד | לעילוי נשמת כל עם ישראל</p>
+    </footer>
+
+    <script>
+        class CompleteHebrewCalendar {
+            constructor() {
+                this.hebrewMonths = ['תשרי', 'חשוון', 'כסלו', 'טבת', 'שבט', 'אדר', 'ניסן', 'אייר', 'סיוון', 'תמוז', 'אב', 'אלול'];
+                this.hebrewMonthsLeap = ['תשרי', 'חשוון', 'כסלו', 'טבת', 'שבט', 'אדר א׳', 'אדר ב׳', 'ניסן', 'אייר', 'סיוון', 'תמוז', 'אב', 'אלול'];
+                
+                this.weekdays = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+                
+                this.hebrewYears = {
+                    5785: { name: 'תשפ"ה', start: new Date(2024, 8, 2), end: new Date(2025, 8, 21) },
+                    5786: { name: 'תשפ"ו', start: new Date(2025, 8, 22), end: new Date(2026, 8, 10) },
+                    5787: { name: 'תשפ"ז', start: new Date(2026, 8, 11), end: new Date(2027, 8, 29) },
+                    5788: { name: 'תשפ"ח', start: new Date(2027, 8, 30), end: new Date(2028, 8, 17) },
+                    5789: { name: 'תשפ"ט', start: new Date(2028, 8, 18), end: new Date(2029, 8, 6) },
+                    5790: { name: 'תש"ץ', start: new Date(2029, 8, 7), end: new Date(2030, 8, 25) }
+                };
+                
+                this.hebrewNumerals = {
+                    1: 'א', 2: 'ב', 3: 'ג', 4: 'ד', 5: 'ה',
+                    6: 'ו', 7: 'ז', 8: 'ח', 9: 'ט', 10: 'י',
+                    20: 'כ', 30: 'ל', 40: 'מ', 50: 'נ',
+                    60: 'ס', 70: 'ע', 80: 'פ', 90: 'צ',
+                    100: 'ק', 200: 'ר', 300: 'ש', 400: 'ת'
+                };
+                
+                this.allParshiot = [
+                    'בראשית', 'נח', 'לך לך', 'וירא', 'חיי שרה', 'תולדות', 'ויצא', 'וישלח',
+                    'וישב', 'מקץ', 'ויגש', 'ויחי', 'שמות', 'וארא', 'בא', 'בשלח',
+                    'יתרו', 'משפטים', 'תרומה', 'תצוה', 'כי תשא', 'ויקהל', 'פקודי',
+                    'ויקרא', 'צו', 'שמיני', 'תזריע', 'מצורע', 'אחרי מות', 'קדושים',
+                    'אמור', 'בהר', 'בחוקותי', 'במדבר', 'נשא', 'בהעלותך', 'שלח',
+                    'קרח', 'חוקת', 'בלק', 'פינחס', 'מטות', 'מסעי', 'דברים', 'ואתחנן',
+                    'עקב', 'ראה', 'שופטים', 'כי תצא', 'כי תבוא', 'ניצבים', 'וילך',
+                    'האזינו', 'וזאת הברכה'
+                ];
+                
+                this.currentYear = 5786;
+                this.displayYear = 5786;
+                
+                this.parshaDatabase = this.createCompleteParshaDatabase();
+                this.holidaysData = this.getHolidaysForYear(this.displayYear);
+                
+                // מערך מסודר לפי הסדר המדויק שהעברת
+                this.yearlyParshiot = this.createCompleteYearlyParshiot();
+                
+                this.init();
+            }
+            
+            init() {
+                this.updateTodayInfo();
+                this.renderCalendar();
+                this.updateHolidaysView();
+                this.updateParshiotView();
+                this.setupEventListeners();
+            }
+            
+            // ==================== יצירת מערך מסודר לפי הסדר המדויק ====================
+            
+            createCompleteYearlyParshiot() {
+                // סדר פרשות מדויק לפי התאריכים שהעברת
+                return [
+                    { date: '2025-09-26', parsha: 'וילך' },      // 26.9.2025
+                    { date: '2025-10-03', parsha: 'האזינו' },    // 3.10.2025
+                    { date: '2025-10-10', parsha: 'וזאת הברכה' }, // 10.10.2025
+                    { date: '2025-10-17', parsha: 'בראשית' },    // 17.10.2025
+                    { date: '2025-10-24', parsha: 'נח' },        // 24.10.2025
+                    { date: '2025-10-31', parsha: 'לך לך' },     // 31.10.2025
+                    { date: '2025-11-07', parsha: 'וירא' },      // 7.11.2025
+                    { date: '2025-11-14', parsha: 'חיי שרה' },   // 14.11.2025
+                    { date: '2025-11-21', parsha: 'תולדות' },    // 21.11.2025
+                    { date: '2025-11-28', parsha: 'ויצא' },      // 28.11.2025
+                    { date: '2025-12-05', parsha: 'וישלח' },     // 5.12.2025
+                    { date: '2025-12-12', parsha: 'וישב' },      // 12.12.2025
+                    { date: '2025-12-19', parsha: 'מקץ' },       // 19.12.2025
+                    { date: '2025-12-26', parsha: 'ויגש' },      // 26.12.2025
+                    { date: '2026-01-02', parsha: 'ויחי' },      // 2.1.2026
+                    { date: '2026-01-09', parsha: 'שמות' },      // 9.1.2026
+                    { date: '2026-01-16', parsha: 'וארא' },      // 16.1.2026
+                    { date: '2026-01-23', parsha: 'בא' },        // 23.1.2026
+                    { date: '2026-01-30', parsha: 'בשלח' },      // 30.1.2026
+                    { date: '2026-02-06', parsha: 'יתרו' },      // 6.2.2026
+                    { date: '2026-02-13', parsha: 'משפטים' },    // 13.2.2026
+                    { date: '2026-02-20', parsha: 'תרומה' },     // 20.2.2026
+                    { date: '2026-02-27', parsha: 'תצוה' },      // 27.2.2026
+                    { date: '2026-03-06', parsha: 'כי תשא' },    // 6.3.2026
+                    { date: '2026-03-13', parsha: 'ויקהל' },     // 13.3.2026
+                    { date: '2026-03-20', parsha: 'פקודי' },     // 20.3.2026
+                    { date: '2026-03-27', parsha: 'ויקרא' },     // 27.3.2026
+                    { date: '2026-04-03', parsha: 'צו' },        // 3.4.2026
+                    { date: '2026-04-10', parsha: 'שמיני' },     // 10.4.2026
+                    { date: '2026-04-17', parsha: 'תזריע' },     // 17.4.2026
+                    { date: '2026-04-24', parsha: 'מצורע' },     // 24.4.2026
+                    { date: '2026-05-01', parsha: 'אחרי מות' },  // 1.5.2026
+                    { date: '2026-05-08', parsha: 'קדושים' },    // 8.5.2026
+                    { date: '2026-05-15', parsha: 'אמור' },      // 15.5.2026
+                    { date: '2026-05-22', parsha: 'בהר' },       // 22.5.2026
+                    { date: '2026-05-29', parsha: 'בחוקותי' },   // 29.5.2026
+                    { date: '2026-06-05', parsha: 'במדבר' },     // 5.6.2026
+                    { date: '2026-06-12', parsha: 'נשא' },       // 12.6.2026
+                    { date: '2026-06-19', parsha: 'בהעלותך' },   // 19.6.2026
+                    { date: '2026-06-26', parsha: 'שלח' },       // 26.6.2026
+                    { date: '2026-07-03', parsha: 'קרח' },       // 3.7.2026
+                    { date: '2026-07-10', parsha: 'חוקת' },      // 10.7.2026
+                    { date: '2026-07-17', parsha: 'בלק' },       // 17.7.2026
+                    { date: '2026-07-24', parsha: 'פינחס' },     // 24.7.2026
+                    { date: '2026-07-31', parsha: 'מטות' },      // 31.7.2026
+                    { date: '2026-08-07', parsha: 'מסעי' },      // 7.8.2026
+                    { date: '2026-08-14', parsha: 'דברים' },     // 14.8.2026
+                    { date: '2026-08-21', parsha: 'ואתחנן' },    // 21.8.2026
+                    { date: '2026-08-28', parsha: 'עקב' },       // 28.8.2026
+                    { date: '2026-09-04', parsha: 'ראה' },       // 4.9.2026
+                    { date: '2026-09-11', parsha: 'שופטים' },    // 11.9.2026
+                    { date: '2026-09-18', parsha: 'כי תצא' },    // 18.9.2026
+                    { date: '2026-09-25', parsha: 'כי תבוא' }    // 25.9.2026
+                ];
+            }
+            
+            // ==================== פונקציה למציאת פרשה ====================
+            
+            getParshaForDate(date, year = this.displayYear) {
+                if (year !== 5786) return null;
+                
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // בדיקה ישירה במערך
+                for (const parshaData of this.yearlyParshiot) {
+                    if (parshaData.date === dateStr) {
+                        return parshaData.parsha;
+                    }
+                }
+                
+                // מציאת הפרשה האחרונה עד לאותו תאריך
+                const targetDate = new Date(dateStr);
+                let lastParsha = null;
+                
+                for (const parshaData of this.yearlyParshiot) {
+                    const parshaDate = new Date(parshaData.date);
+                    if (parshaDate <= targetDate) {
+                        lastParsha = parshaData.parsha;
+                    } else {
+                        break; // עצור כי מצאנו תאריך גדול יותר
+                    }
+                }
+                
+                return lastParsha;
+            }
+            
+            // ==================== מאגר פרשות מלא ====================
+            
+            createCompleteParshaDatabase() {
+                return {
+                    'בראשית': {
+                        summary: 'בריאת העולם בששה ימים, בריאת אדם וחוה בגן עדן, חטא עץ הדעת, קין והבל.',
+                        verses: 'בראשית א:א - ו:ח',
+                        topics: ['בריאת העולם', 'אדם וחוה', 'גן עדן', 'קין והבל'],
+                        detailedCommentary: `
+                            <div class="zohar-section">
+                                <h4><i class="fas fa-star-of-david"></i> פירוש הזוהר הקדוש:</h4>
+                                <p>הזוהר פותח: "בראשית - בשביל התורה שנקראת ראשית, ובשביל ישראל שנקראו ראשית".</p>
+                            </div>
+                            <div class="commentary-section">
+                                <h4><i class="fas fa-comment"></i> פירוש רש"י:</h4>
+                                <p>רש"י פותח בשאלה: "למה לא התחילה התורה מ'החודש הזה לכם'?" ומשיב: "כח מעשיו הגיד לעמו לתת להם נחלת גויים".</p>
+                            </div>
+                        `,
+                        lessons: ['האדם נברא בצלם אלוהים', 'בריאת העולם בששה ימים', 'השבת - יום מנוחה וקדושה']
+                    },
+                    'נח': {
+                        summary: 'המבול בא על דור המבול, נח בונה תיבה, הקשת בענן, דור הפלגה.',
+                        verses: 'בראשית ו:ט - יא:לב',
+                        topics: ['נח והתיבה', 'המבול', 'ברית הקשת', 'דור הפלגה'],
+                        detailedCommentary: `
+                            <div class="zohar-section">
+                                <h4><i class="fas fa-star-of-david"></i> פירוש הזוהר הקדוש:</h4>
+                                <p>הזוהר מסביר: "נח מצא חן - נו"ן ח"ת, אלו השערים של החמשים שערי בינה שנפתחו לנח".</p>
+                            </div>
+                        `,
+                        lessons: ['צדיק אחד יכול להציל את כל העולם', 'ברית הקשת מלמדת על סליחה ומחילה']
+                    },
+                    'לך לך': {
+                        summary: 'אברהם נצטווה לעזוב את ארצו, מסע לארץ כנען, ברית בין הבתרים.',
+                        verses: 'בראשית יב:א - יז:כז',
+                        topics: ['אברהם אבינו', 'לך לך מארצך', 'ברית בין הבתרים'],
+                        detailedCommentary: `
+                            <div class="commentary-section">
+                                <h4><i class="fas fa-comment"></i> פירוש רש"י:</h4>
+                                <p>"לך לך - להנאתך ולטובתך, ושם אעשך לגוי גדול, וכאן אי אתה זוכה לבנים".</p>
+                            </div>
+                        `,
+                        lessons: ['אמונה ועשייה - אברהם הולך בלא לדעת לאן מתוך אמונה', 'הכנסת אורחים כמידה מרכזית']
+                    },
+                    'וירא': {
+                        summary: 'ביקור המלאכים אצל אברהם, השמדת סדום, לידת יצחק, עקדת יצחק.',
+                        verses: 'בראשית יח:א - כב:כד',
+                        topics: ['ביקור המלאכים', 'סדום ועמורה', 'עקדת יצחק'],
+                        lessons: ['הכנסת אורחים - אברהם רץ לקבל את המלאכים', 'מסירות נפש בעקדת יצחק']
+                    },
+                    'חיי שרה': {
+                        summary: 'מות שרה וקניית מערת המכפלה, אברהם שולח את עבדו להביא כלה ליצחק, רבקה.',
+                        verses: 'בראשית כג:א - כה:יח',
+                        topics: ['מות שרה', 'מערת המכפלה', 'רבקה'],
+                        lessons: ['כבוד המת וקבורתו בקבורה מכובדת', 'חשיבות הזיווג הנכון']
+                    },
+                    'תולדות': {
+                        summary: 'לידת יעקב ועשיו, מכירת הבכורה, ברכת יצחק ליעקב.',
+                        verses: 'בראשית כה:יט - כח:ט',
+                        topics: ['יעקב ועשיו', 'מכירת הבכורה', 'ברכות יצחק'],
+                        lessons: ['ערך הבכורה והרוחניות', 'חשיבות הברכה האבהית']
+                    },
+                    'ויצא': {
+                        summary: 'חלום יעקב בסולם, יעקב אצל לבן, נישואיו ללאה ורחל.',
+                        verses: 'בראשית כח:י - לב:ג',
+                        topics: ['חלום הסולם', 'יעקב ולבן', 'נישואי יעקב'],
+                        lessons: ['השגחה פרטית - אלוהים שומר על יעקב', 'עבודה קשה ושכרה']
+                    },
+                    'וישלח': {
+                        summary: 'פגישת יעקב ועשיו, מאבק עם המלאך, מעשה דינה ושכם.',
+                        verses: 'בראשית לב:ד - לו:מג',
+                        topics: ['פגישת יעקב ועשיו', 'מאבק עם המלאך', 'דינה ושכם'],
+                        lessons: ['התמודדות עם פחד וסכנה', 'כוחה של תפילה']
+                    },
+                    'וישב': {
+                        summary: 'יוסף ואחיו, חלומות יוסף, מכירת יוסף, יהודה ותמר.',
+                        verses: 'בראשית לז:א - מ:כג',
+                        topics: ['יוסף ואחיו', 'חלומות יוסף', 'מכירת יוסף'],
+                        lessons: ['קנאה בין אחים', 'שמירה על צדקות בניסיונות']
+                    },
+                    'מקץ': {
+                        summary: 'חלומות פרעה, יוסף מפותר את החלומות, יוסף שליט על מצרים.',
+                        verses: 'בראשית מא:א - מד:יז',
+                        topics: ['חלומות פרעה', 'יוסף שליט מצרים'],
+                        lessons: ['חכמה אלוהית מול חכמה אנושית', 'השגחה בתהפוכות החיים']
+                    },
+                    'ויגש': {
+                        summary: 'יהודה ניגש ליוסף, יוסף מתוודע לאחיו, יעקב יורד למצרים.',
+                        verses: 'בראשית מד:יח - מז:כז',
+                        topics: ['יהודה ניגש ליוסף', 'התוודעות יוסף', 'ירידת יעקב למצרים'],
+                        lessons: ['גבורה להגן על החלש', 'סליחה ומחילה']
+                    },
+                    'ויחי': {
+                        summary: 'יעקב מברך את בניו, ברכת יעקב לשבטים, מות יעקב, מות יוסף.',
+                        verses: 'בראשית מז:כח - נ:כו',
+                        topics: ['ברכות יעקב', 'מות יעקב', 'מות יוסף'],
+                        lessons: ['ברכה לדורות', 'אחריות על המשפחה', 'אמונה בגאולה העתידית']
+                    },
+                    'שמות': {
+                        summary: 'שעבוד בני ישראל במצרים, לידת משה, הסנה הבוער, שליחותו של משה.',
+                        verses: 'שמות א:א - ו:א',
+                        topics: ['שעבוד מצרים', 'לידת משה', 'הסנה הבוער'],
+                        lessons: ['גאולה מגיעה אחרי שעבוד', 'אמונה בהשגחה גם בזמנים קשים']
+                    },
+                    'וארא': {
+                        summary: 'המכות: דם, צפרדע, כינים, ערוב, דבר, שחין.',
+                        verses: 'שמות ו:ב - ט:לה',
+                        topics: ['מכות מצרים', 'קשיחות פרעה', 'גאולת ישראל'],
+                        lessons: ['כוחו של אלוהים על הטבע', 'חשיבות האמונה בעת משבר']
+                    },
+                    'בא': {
+                        summary: 'מכות ארבה, חושך, בכורות, יציאת מצרים, קידוש בכורות.',
+                        verses: 'שמות י:א - יג:טז',
+                        topics: ['מכת בכורות', 'יציאת מצרים', 'קידוש בכורות'],
+                        lessons: ['חירות אמיתית היא רוחנית', 'זיכרון הגאולה בכל דור ודור']
+                    },
+                    'בשלח': {
+                        summary: 'קריעת ים סוף, שירת הים, מן, מרה, עמלק.',
+                        verses: 'שמות יג:יז - יז:טז',
+                        topics: ['קריעת ים סוף', 'שירת הים', 'מן', 'עמלק'],
+                        lessons: ['ניסים מתרחשים לאנשים מאמינים', 'הודיה על הנס']
+                    },
+                    'יתרו': {
+                        summary: 'יתרו מגיע למחנה ישראל, מתן תורה בהר סיני, עשרת הדיברות.',
+                        verses: 'שמות יח:א - כ:כו',
+                        topics: ['יתרו', 'מתן תורה', 'עשרת הדיברות'],
+                        lessons: ['קבלת התורה בשמחה', 'ייעוץ ועצה טובה']
+                    },
+                    'משפטים': {
+                        summary: 'דיני נזיקין, עבד עברי, גנב, רוצח, דיני משפטים.',
+                        verses: 'שמות כא:א - כד:יח',
+                        topics: ['דיני נזיקין', 'משפט עברי', 'חוקי התורה'],
+                        lessons: ['צדק חברתי', 'התורה כמדריך לחיים מוסריים']
+                    },
+                    'תרומה': {
+                        summary: 'ציווי על בניית המשכן, תרומות העם, כלי המשכן.',
+                        verses: 'שמות כה:א - כז:יט',
+                        topics: ['בניית המשכן', 'תרומות', 'כלי הקודש'],
+                        lessons: ['נדיבות הלב', 'קדושה בחיי היום-יום']
+                    },
+                    'תצוה': {
+                        summary: 'בגדי כהונה, קורבן התמיד, מזבח הקטורת.',
+                        verses: 'שמות כז:כ - ל:י',
+                        topics: ['בגדי כהונה', 'קורבן תמיד', 'מזבח הקטורת'],
+                        lessons: ['יופי חיצוני ככלי לרוחניות', 'תפילה קבועה']
+                    },
+                    'כי תשא': {
+                        summary: 'מחצית השקל, חטא העגל, שבירת הלוחות, תפילת משה.',
+                        verses: 'שמות ל:יא - לד:לה',
+                        topics: ['חטא העגל', 'מחצית השקל', 'תפילת משה'],
+                        lessons: ['חטא ותשובה', 'ערבות הדדית']
+                    },
+                    'ויקהל': {
+                        summary: 'הקהלת העם, תרומות למשכן, חכמי הלב.',
+                        verses: 'שמות לה:א - לח:כ',
+                        topics: ['הקהלה', 'תרומות', 'חכמי הלב'],
+                        lessons: ['כוחה של הקהילה', 'כל אדם לפי יכולתו']
+                    },
+                    'פקודי': {
+                        summary: 'פקודי המשכן, סיכום התרומות, הקמת המשכן.',
+                        verses: 'שמות לח:כא - מ:לח',
+                        topics: ['פקודי המשכן', 'הקמת המשכן', 'שכינה'],
+                        lessons: ['דיוק במצוות', 'שכינה שורה במקום קדוש']
+                    },
+                    'ויקרא': {
+                        summary: 'קורבנות: עולה, מנחה, שלמים, חטאת, אשם.',
+                        verses: 'ויקרא א:א - ה:כו',
+                        topics: ['קורבנות', 'עבודה במשכן', 'כפרה'],
+                        lessons: ['קרבת אלוהים', 'תשובה וכפרה']
+                    },
+                    'צו': {
+                        summary: 'תורת הקורבנות: העולה, המנחה, חטאת, אשם, מילואים.',
+                        verses: 'ויקרא ו:א - ח:לו',
+                        topics: ['תורת הקורבנות', 'קדושת הכוהנים', 'מילואים'],
+                        lessons: ['מסירות בעבודה', 'קדושה בתפקיד']
+                    },
+                    'שמיני': {
+                        summary: 'יום השמיני למילואים, מות נדב ואביהוא, דיני טומאה וטהרה.',
+                        verses: 'ויקרא ט:א - יא:מז',
+                        topics: ['מות נדב ואביהוא', 'טומאה וטהרה', 'כשרות'],
+                        lessons: ['יראת שמים', 'הקפדה על ההלכה']
+                    },
+                    'תזריע': {
+                        summary: 'דיני יולדת, צרעת האדם, צרעת הבגד.',
+                        verses: 'ויקרא יב:א - יג:נט',
+                        topics: ['יולדת', 'צרעת', 'טומאה'],
+                        lessons: ['חיים חדשים', 'רפואה רוחנית']
+                    },
+                    'מצורע': {
+                        summary: 'טהרת המצורע, צרעת הבית.',
+                        verses: 'ויקרא יד:א - טו:לג',
+                        topics: ['טהרת מצורע', 'צרעת הבית', 'טבילה'],
+                        lessons: ['תהליך טהרה', 'תשובה שלמה']
+                    },
+                    'אחרי מות': {
+                        summary: 'עבודת יום הכיפורים, איסור גילוי עריות.',
+                        verses: 'ויקרא טז:א - יח:ל',
+                        topics: ['יום כיפור', 'גילוי עריות', 'קדושה'],
+                        lessons: ['כפרה וטהרה', 'שמירה על הצניעות']
+                    },
+                    'קדושים': {
+                        summary: 'קדושת עם ישראל, מצוות בין אדם לחברו.',
+                        verses: 'ויקרא יט:א - כ:כז',
+                        topics: ['קדושה', 'מצוות חברתיות', 'מוסר'],
+                        lessons: ['קדושה בחיי היום-יום', 'צדק חברתי']
+                    },
+                    'אמור': {
+                        summary: 'דיני כוהנים, מועדי השם, קידוש השם.',
+                        verses: 'ויקרא כא:א - כד:כג',
+                        topics: ['כוהנים', 'מועדים', 'קידוש השם'],
+                        lessons: ['מנהיגות רוחנית', 'שמירת המועדים']
+                    },
+                    'בהר': {
+                        summary: 'שמיטה, יובל, גאולת אדמה, איסור ריבית.',
+                        verses: 'ויקרא כה:א - כו:ב',
+                        topics: ['שמיטה', 'יובל', 'צדק חברתי'],
+                        lessons: ['אמונה בפרנסה', 'חירות ושוויון']
+                    },
+                    'בחוקותי': {
+                        summary: 'ברכות וקללות, ערכין, חרמות.',
+                        verses: 'ויקרא כו:ג - כז:לד',
+                        topics: ['ברכות', 'קללות', 'נדרים'],
+                        lessons: ['שכר ועונש', 'נאמנות לדיבור']
+                    },
+                    'במדבר': {
+                        summary: 'מפקד בני ישראל, סדר המחנות, משא הלויים.',
+                        verses: 'במדבר א:א - ד:כ',
+                        topics: ['מפקד', 'סדר מחנות', 'לויים'],
+                        lessons: ['סדר וארגון', 'כל אחד חשוב']
+                    },
+                    'נשא': {
+                        summary: 'משא הלויים, סוטה, נזיר, ברכת כוהנים.',
+                        verses: 'במדבר ד:כא - ז:פט',
+                        topics: ['סוטה', 'נזיר', 'ברכת כוהנים'],
+                        lessons: ['אמון בזוגיות', 'קדושה מיוחדת']
+                    },
+                    'בהעלותך': {
+                        summary: 'הדלקת המנורה, טהרת הלויים, המסעות, המתאוננים.',
+                        verses: 'במדבר ח:א - יב:טז',
+                        topics: ['מנורה', 'מסעות', 'קברות התאווה'],
+                        lessons: ['הארת העולם', 'סבלנות במסע החיים']
+                    },
+                    'שלח': {
+                        summary: 'מרגלים, חטא המרגלים, מצוות ציצית.',
+                        verses: 'במדבר יג:א - טו:מא',
+                        topics: ['מרגלים', 'חטא המרגלים', 'ציצית'],
+                        lessons: ['אמונה בעת מבחן', 'זיכרון המצוות']
+                    },
+                    'קרח': {
+                        summary: 'מחלוקת קרח ועדתו, פריחת מטה אהרן.',
+                        verses: 'במדבר טז:א - יח:לב',
+                        topics: ['מחלוקת קרח', 'מטה אהרן', 'תרומות'],
+                        lessons: ['סכנת המחלוקת', 'כבוד למנהיגות']
+                    },
+                    'חוקת': {
+                        summary: 'פרה אדומה, מות מרים, מי מריבה, נחש הנחושת.',
+                        verses: 'במדבר יט:א - כב:א',
+                        topics: ['פרה אדומה', 'מי מריבה', 'נחש נחושת'],
+                        lessons: ['קבלת גזירות', 'אמונה בעת משבר']
+                    },
+                    'בלק': {
+                        summary: 'בלק ובלעם, אתונו של בלעם, ברכות בלעם.',
+                        verses: 'במדבר כב:ב - כה:ט',
+                        topics: ['בלעם', 'אתון', 'ברכות'],
+                        lessons: ['כוחה של ברכה', 'השגחה פרטית']
+                    },
+                    'פינחס': {
+                        summary: 'קנאות פינחס, מפקד חדש, בנות צלפחד.',
+                        verses: 'במדבר כה:י - ל:א',
+                        topics: ['פינחס', 'מפקד', 'בנות צלפחד'],
+                        lessons: ['קנאות לטובה', 'צדק לנשים']
+                    },
+                    'מטות': {
+                        summary: 'נדרים ושבועות, מלחמת מדין, חלוקת השלל.',
+                        verses: 'במדבר ל:ב - לב:מב',
+                        topics: ['נדרים', 'מלחמת מדין', 'חלוקת שלל'],
+                        lessons: ['קדושת הדיבור', 'צדק במלחמה']
+                    },
+                    'מסעי': {
+                        summary: 'מסעי בני ישראל, גבולות הארץ, ערי מקלט.',
+                        verses: 'במדבר לג:א - לו:יג',
+                        topics: ['מסעות', 'גבולות', 'ערי מקלט'],
+                        lessons: ['זיכרון הדרך', 'צדק במשפט']
+                    },
+                    'דברים': {
+                        summary: 'נאום משה רבנו לפני מותו, תוכחה והיסטוריה.',
+                        verses: 'דברים א:א - ג:כב',
+                        topics: ['נאום משה', 'תוכחה', 'היסטוריה'],
+                        lessons: ['למידה מהעבר', 'הכנה לעתיד']
+                    },
+                    'ואתחנן': {
+                        summary: 'תפילת משה, עשרת הדיברות, שמע ישראל.',
+                        verses: 'דברים ג:כג - ז:יא',
+                        topics: ['תפילת משה', 'עשרת הדיברות', 'שמע ישראל'],
+                        lessons: ['כוחה של תפילה', 'אחדות ה\'']
+                    },
+                    'עקב': {
+                        summary: 'שכר על קיום המצוות, ירושת הארץ, סכנת הגאווה.',
+                        verses: 'דברים ז:יב - יא:כה',
+                        topics: ['שכר מצוות', 'ירושת הארץ', 'ענוה'],
+                        lessons: ['שכר ועונש', 'ענוה והכרת תודה']
+                    },
+                    'ראה': {
+                        summary: 'מצוות הריגה בעיר הנידחת, כשרות, מעשר.',
+                        verses: 'דברים יא:כו - טז:יז',
+                        topics: ['עיר הנידחת', 'כשרות', 'מעשר'],
+                        lessons: ['מלחמה בעבודה זרה', 'צדקה וחסד']
+                    },
+                    'שופטים': {
+                        summary: 'מינוי שופטים ושוטרים, דיני עדים, מלחמה.',
+                        verses: 'דברים טז:יח - כא:ט',
+                        topics: ['שופטים', 'עדים', 'מלחמה'],
+                        lessons: ['צדק משפטי', 'מוסר במלחמה']
+                    },
+                    'כי תצא': {
+                        summary: 'דיני משפחה, עניינים שבין אדם לחברו.',
+                        verses: 'דברים כא:י - כה:יט',
+                        topics: ['דיני משפחה', 'מצוות חברתיות', 'מוסר'],
+                        lessons: ['יחסים במשפחה', 'צדק בחברה']
+                    },
+                    'כי תבוא': {
+                        summary: 'ביכורים, ברכות וקללות, ברית בערבות מואב.',
+                        verses: 'דברים כו:א - כט:ח',
+                        topics: ['ביכורים', 'ברכות וקללות', 'ברית'],
+                        lessons: ['הודיה על הטוב', 'אחריות על הברית']
+                    },
+                    'ניצבים': {
+                        summary: 'ברית בין ה׳ לישראל, בחירה בטוב.',
+                        verses: 'דברים כט:ט - ל:כ',
+                        topics: ['ברית', 'בחירה חופשית', 'תשובה'],
+                        lessons: ['אחריות אישית', 'כוחה של תשובה']
+                    },
+                    'וילך': {
+                        summary: 'משה מפקד את יהושע, קריאת התורה במועדים.',
+                        verses: 'דברים לא:א - לא:ל',
+                        topics: ['מסירת ההנהגה', 'קריאת התורה', 'נבואה'],
+                        lessons: ['הכנה לדורות הבאים', 'לימוד תורה קבוע']
+                    },
+                    'האזינו': {
+                        summary: 'שירת האזינו, נבואה על תולדות ישראל.',
+                        verses: 'דברים לב:א - לב:נב',
+                        topics: ['שירת האזינו', 'נבואה', 'היסטוריה'],
+                        lessons: ['לימוד מההיסטוריה', 'צדק אלוהי']
+                    },
+                    'וזאת הברכה': {
+                        summary: 'ברכת משה לשבטים לפני מותו, מות משה.',
+                        verses: 'דברים לג:א - לד:יב',
+                        topics: ['ברכות לשבטים', 'מות משה', 'הנהגת יהושע'],
+                        lessons: ['ברכה לדורות', 'מסורת ההנהגה']
+                    }
+                };
+            }
+            
+            // ==================== חגים עם תאריכים מדויקים ====================
+            
+            getHolidaysForYear(year = this.displayYear) {
+                // חגי תשפ"ו
+                if (year === 5786) {
+                    return [
+                        {
+                            name: 'ראש השנה',
+                            hebrewDate: 'א-ב תשרי',
+                            gregorianDate: '14-15 ספטמבר 2025',
+                            type: 'holiday',
+                            desc: 'יום הדין ותחילת השנה העברית. שופרות, תפילות מיוחדות ותשובה.'
+                        },
+                        {
+                            name: 'צום גדליה',
+                            hebrewDate: 'ג תשרי',
+                            gregorianDate: '16 ספטמבר 2025',
+                            type: 'fast',
+                            desc: 'צום לזכר רצח גדליה בן אחיקם, המושל היהודי האחרון ביהודה.'
+                        },
+                        {
+                            name: 'יום כיפור',
+                            hebrewDate: 'י תשרי',
+                            gregorianDate: '22 ספטמבר 2025',
+                            type: 'fast',
+                            desc: 'יום הכיפורים - יום הסליחה והתשובה. צום, תפילות וקבלת החלטות טובות.'
+                        },
+                        {
+                            name: 'סוכות',
+                            hebrewDate: 'ט"ו-כ"א תשרי',
+                            gregorianDate: '27 ספטמבר - 3 אוקטובר 2025',
+                            type: 'holiday',
+                            desc: 'חג הסוכות - ישיבה בסוכה, נטילת ארבעת המינים ושמחת בית השואבה.'
+                        },
+                        {
+                            name: 'הושענא רבה',
+                            hebrewDate: 'כ"א תשרי',
+                            gregorianDate: '3 אוקטובר 2025',
+                            type: 'holiday',
+                            desc: 'יום ההושענות האחרון בסוכות. תפילות מיוחדות וחתימת הדין.'
+                        },
+                        {
+                            name: 'שמיני עצרת',
+                            hebrewDate: 'כ"ב תשרי',
+                            gregorianDate: '4 אוקטובר 2025',
+                            type: 'holiday',
+                            desc: 'שמיני עצרת - חג נפרד מסוכות. תפילת גשם ותפילות מיוחדות.'
+                        },
+                        {
+                            name: 'שמחת תורה',
+                            hebrewDate: 'כ"ג תשרי',
+                            gregorianDate: '5 אוקטובר 2025',
+                            type: 'holiday',
+                            desc: 'שמחת תורה - מסיימים את קריאת התורה ומתחילים מבראשית.'
+                        },
+                        {
+                            name: 'חנוכה',
+                            hebrewDate: 'כ"ה כסלו - ב טבת',
+                            gregorianDate: '14-21 דצמבר 2025',
+                            type: 'holiday',
+                            desc: 'חג החנוכה - ניצחון המכבים על היוונים. הדלקת נרות, סופגניות ולביבות.'
+                        },
+                        {
+                            name: 'עשרה בטבת',
+                            hebrewDate: 'י טבת',
+                            gregorianDate: '30 דצמבר 2025',
+                            type: 'fast',
+                            desc: 'צום עשרה בטבת - תחילת המצור על ירושלים שהוביל לחורבן בית המקדש.'
+                        },
+                        {
+                            name: 'ט"ו בשבט',
+                            hebrewDate: 'ט"ו שבט',
+                            gregorianDate: '1 פברואר 2026',
+                            type: 'holiday',
+                            desc: 'ראש השנה לאילנות. נטיעות, אכילת פירות ומודעות לשמירת הטבע.'
+                        },
+                        {
+                            name: 'תענית אסתר',
+                            hebrewDate: 'י"ג אדר ב',
+                            gregorianDate: '23 מרץ 2026',
+                            type: 'fast',
+                            desc: 'תענית אסתר - ערב פורים. צום לזכר תענית אסתר לפני כניסתה למלך.'
+                        },
+                        {
+                            name: 'פורים',
+                            hebrewDate: 'י"ד אדר ב',
+                            gregorianDate: '24 מרץ 2026',
+                            type: 'holiday',
+                            desc: 'פורים - נס הצלת יהודי פרס. קריאת מגילה, משלוח מנות ומתנות לאביונים.'
+                        },
+                        {
+                            name: 'שושן פורים',
+                            hebrewDate: 'ט"ו אדר ב',
+                            gregorianDate: '25 מרץ 2026',
+                            type: 'holiday',
+                            desc: 'שושן פורים - חגגו בשושן הבירה יום נוסף.'
+                        },
+                        {
+                            name: 'פסח',
+                            hebrewDate: 'ט"ו-כ"ב ניסן',
+                            gregorianDate: '1-8 אפריל 2026',
+                            type: 'holiday',
+                            desc: 'חג הפסח - יציאת מצרים וחג החירות. ליל הסדר, מצות והגדה של פסח.'
+                        },
+                        {
+                            name: 'פסח שני',
+                            hebrewDate: 'ה אייר',
+                            gregorianDate: '8 מאי 2026',
+                            type: 'holiday',
+                            desc: 'פסח שני - הזדמנות שנייה לקרבן פסח למי שלא יכול היה להקריב בפסח ראשון.'
+                        },
+                        {
+                            name: 'ל"ג בעומר',
+                            hebrewDate: 'י"ח אייר',
+                            gregorianDate: '26 מאי 2026',
+                            type: 'holiday',
+                            desc: 'הילולת רבי שמעון בר יוחאי. מדורות, חץ וקשת וחגיגות במרון.'
+                        },
+                        {
+                            name: 'יום ירושלים',
+                            hebrewDate: 'כ"ח אייר',
+                            gregorianDate: '5 יוני 2026',
+                            type: 'holiday',
+                            desc: 'יום שחרור ירושלים ואיחוד העיר במלחמת ששת הימים. תפילות הודייה וריקודים.'
+                        },
+                        {
+                            name: 'שבועות',
+                            hebrewDate: 'ו-ז סיוון',
+                            gregorianDate: '24-25 מאי 2026',
+                            type: 'holiday',
+                            desc: 'חג השבועות - מתן תורה בהר סיני. לימוד תורה, קישוט בית הכנסת ואכילת מאכלי חלב.'
+                        },
+                        {
+                            name: 'שבעה עשר בתמוז',
+                            hebrewDate: 'י"ז תמוז',
+                            gregorianDate: '25 יולי 2026',
+                            type: 'fast',
+                            desc: 'צום שבעה עשר בתמוז - נפרצו חומות ירושלים לפני חורבן בית המקדש.'
+                        },
+                        {
+                            name: 'תשעה באב',
+                            hebrewDate: 'ט אב',
+                            gregorianDate: '13 אוגוסט 2026',
+                            type: 'fast',
+                            desc: 'צום תשעה באב - יום חורבן בית המקדש הראשון והשני. קינות וישיבה על הארץ.'
+                        },
+                        {
+                            name: 'ט"ו באב',
+                            hebrewDate: 'ט"ו אב',
+                            gregorianDate: '21 אוגוסט 2026',
+                            type: 'holiday',
+                            desc: 'חג האהבה - יום של שמחה ואהבה. מסורת של שידוכים וריקודים בכרמים.'
+                        }
+                    ];
+                }
+                // ניתן להוסיף שנים נוספות כאן
+                return [];
+            }
+            
+            getHolidayForDate(date, year = this.displayYear) {
+                // חגי תשפ"ו
+                if (year === 5786) {
+                    const holidaysMap = {
+                        '2025-09-14': { name: 'ראש השנה', type: 'holiday', desc: 'יום הדין ותחילת השנה העברית' },
+                        '2025-09-15': { name: 'ראש השנה', type: 'holiday', desc: 'יום שני של ראש השנה' },
+                        '2025-09-16': { name: 'צום גדליה', type: 'fast', desc: 'צום לזכר רצח גדליה בן אחיקם' },
+                        '2025-09-22': { name: 'יום כיפור', type: 'fast', desc: 'יום הכיפורים - יום הסליחה והתשובה' },
+                        '2025-09-27': { name: 'סוכות', type: 'holiday', desc: 'חג הסוכות - ישיבה בסוכה' },
+                        '2025-09-28': { name: 'סוכות', type: 'holiday', desc: 'יום שני של סוכות' },
+                        '2025-10-03': { name: 'הושענא רבה', type: 'holiday', desc: 'יום ההושענות' },
+                        '2025-10-04': { name: 'שמיני עצרת', type: 'holiday', desc: 'שמיני עצרת' },
+                        '2025-10-05': { name: 'שמחת תורה', type: 'holiday', desc: 'שמחת תורה - מסיימים את התורה' },
+                        '2025-12-14': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר ראשון' },
+                        '2025-12-15': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר שני' },
+                        '2025-12-16': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר שלישי' },
+                        '2025-12-17': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר רביעי' },
+                        '2025-12-18': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר חמישי' },
+                        '2025-12-19': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר שישי' },
+                        '2025-12-20': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר שביעי' },
+                        '2025-12-21': { name: 'חנוכה', type: 'holiday', desc: 'חנוכה - נר שמיני' },
+                        '2025-12-30': { name: 'עשרה בטבת', type: 'fast', desc: 'צום עשרה בטבת' },
+                        '2026-02-01': { name: 'ט"ו בשבט', type: 'holiday', desc: 'ראש השנה לאילנות' },
+                        '2026-03-23': { name: 'תענית אסתר', type: 'fast', desc: 'תענית אסתר - ערב פורים' },
+                        '2026-03-24': { name: 'פורים', type: 'holiday', desc: 'פורים - קריאת המגילה' },
+                        '2026-03-25': { name: 'שושן פורים', type: 'holiday', desc: 'שושן פורים' },
+                        '2026-04-01': { name: 'פסח', type: 'holiday', desc: 'חג הפסח - ליל הסדר' },
+                        '2026-04-02': { name: 'פסח', type: 'holiday', desc: 'יום שני של פסח' },
+                        '2026-04-07': { name: 'פסח', type: 'holiday', desc: 'שביעי של פסח' },
+                        '2026-04-08': { name: 'פסח', type: 'holiday', desc: 'אחרון של פסח' },
+                        '2026-05-08': { name: 'פסח שני', type: 'holiday', desc: 'פסח שני' },
+                        '2026-05-24': { name: 'שבועות', type: 'holiday', desc: 'חג השבועות - מתן תורה' },
+                        '2026-05-25': { name: 'שבועות', type: 'holiday', desc: 'יום שני של שבועות' },
+                        '2026-05-26': { name: 'ל"ג בעומר', type: 'holiday', desc: 'הילולת רבי שמעון בר יוחאי' },
+                        '2026-06-05': { name: 'יום ירושלים', type: 'holiday', desc: 'יום שחרור ירושלים' },
+                        '2026-07-25': { name: 'שבעה עשר בתמוז', type: 'fast', desc: 'צום שבעה עשר בתמוז' },
+                        '2026-08-13': { name: 'תשעה באב', type: 'fast', desc: 'צום תשעה באב' },
+                        '2026-08-21': { name: 'ט"ו באב', type: 'holiday', desc: 'חג האהבה' }
+                    };
+                    
+                    const dateStr = date.toISOString().split('T')[0];
+                    return holidaysMap[dateStr] || null;
+                }
+                return null;
+            }
+            
+            // ==================== שאר הפונקציות ====================
+            
+            toHebrewNumeral(num) {
+                if (num <= 0) return '';
+                if (num === 15) return 'ט"ו';
+                if (num === 16) return 'ט"ז';
+                if (num <= 10) return this.hebrewNumerals[num];
+                
+                let result = '';
+                let remaining = num;
+                
+                if (remaining >= 400) {
+                    result += this.hebrewNumerals[400];
+                    remaining -= 400;
+                }
+                if (remaining >= 300) {
+                    result += this.hebrewNumerals[300];
+                    remaining -= 300;
+                }
+                if (remaining >= 200) {
+                    result += this.hebrewNumerals[200];
+                    remaining -= 200;
+                }
+                if (remaining >= 100) {
+                    result += this.hebrewNumerals[100];
+                    remaining -= 100;
+                }
+                
+                if (remaining > 0) {
+                    if (remaining === 15) {
+                        result += 'ט"ו';
+                    } else if (remaining === 16) {
+                        result += 'ט"ז';
+                    } else {
+                        const tens = Math.floor(remaining / 10) * 10;
+                        const units = remaining % 10;
+                        
+                        if (tens > 0 && this.hebrewNumerals[tens]) {
+                            result += this.hebrewNumerals[tens];
+                        }
+                        if (units > 0 && this.hebrewNumerals[units]) {
+                            result += this.hebrewNumerals[units];
+                        }
+                    }
+                }
+                
+                if (result.length > 1 && num > 10 && num !== 15 && num !== 16) {
+                    result = result.slice(0, -1) + '"' + result.slice(-1);
+                }
+                
+                return result;
+            }
+            
+            calculateHebrewDate(gregorianDate) {
+                const yearData = this.hebrewYears[this.displayYear];
+                if (!yearData) return '';
+                
+                const diffDays = Math.floor((gregorianDate - yearData.start) / (1000 * 60 * 60 * 24));
+                if (diffDays < 0 || diffDays > 380) return '';
+                
+                const monthLengths = [30, 29, 30, 29, 30, 30, 29, 30, 29, 30, 29, 30, 29];
+                const months = this.hebrewMonthsLeap;
+                
+                let remainingDays = diffDays;
+                let monthIndex = 0;
+                
+                for (let i = 0; i < monthLengths.length; i++) {
+                    if (remainingDays < monthLengths[i]) {
+                        monthIndex = i;
+                        break;
+                    }
+                    remainingDays -= monthLengths[i];
+                }
+                
+                const hebrewDay = remainingDays + 1;
+                const hebrewMonth = months[monthIndex];
+                
+                return `${this.toHebrewNumeral(hebrewDay)} ב${hebrewMonth}`;
+            }
+            
+            getYearName(year) {
+                return this.hebrewYears[year]?.name || `שנה ${year}`;
+            }
+            
+            updateYearDisplay() {
+                const yearData = this.hebrewYears[this.displayYear];
+                if (yearData) {
+                    const startMonth = yearData.start.toLocaleDateString('he-IL', { month: 'long', year: 'numeric' });
+                    const endMonth = yearData.end.toLocaleDateString('he-IL', { month: 'long', year: 'numeric' });
+                    document.getElementById('yearDisplay').textContent = 
+                        `שנת ${yearData.name} (${startMonth} - ${endMonth})`;
+                    
+                    document.getElementById('holiday-year').textContent = yearData.name;
+                    document.getElementById('parsha-year').textContent = yearData.name;
+                    document.getElementById('yearInput').value = this.displayYear;
+                }
+            }
+            
+            updateTodayInfo() {
+                const today = new Date();
+                const hebrewDate = this.calculateHebrewDate(today);
+                const gregorianDate = today.toLocaleDateString('he-IL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                document.getElementById('currentHebrewDate').textContent = `${hebrewDate} ${this.getYearName(this.displayYear)}`;
+                document.getElementById('currentGregorianDate').textContent = gregorianDate;
+                
+                const todayParsha = this.getParshaForDate(today, this.displayYear);
+                const parshaText = todayParsha ? `פרשת ${todayParsha}` : 'אין פרשה היום';
+                document.getElementById('today-parsha').innerHTML = 
+                    `<i class="fas fa-torah"></i> ${parshaText}`;
+                
+                if (todayParsha) {
+                    document.getElementById('today-parsha').onclick = () => this.showParshaModal(todayParsha);
+                }
+                
+                this.updateYearDisplay();
+            }
+            
+            createMonthCard(month, year) {
+                const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", 
+                                  "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+                
+                const card = document.createElement('div');
+                card.className = 'month-card';
+                
+                const header = document.createElement('div');
+                header.className = 'month-header';
+                header.textContent = `${monthNames[month]} ${year}`;
+                card.appendChild(header);
+                
+                const weekdaysDiv = document.createElement('div');
+                weekdaysDiv.className = 'weekdays';
+                this.weekdays.forEach(day => {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'weekday';
+                    dayDiv.textContent = day;
+                    weekdaysDiv.appendChild(dayDiv);
+                });
+                card.appendChild(weekdaysDiv);
+                
+                const daysGrid = document.createElement('div');
+                daysGrid.className = 'days-grid';
+                
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.className = 'day-cell';
+                    emptyCell.style.visibility = 'hidden';
+                    daysGrid.appendChild(emptyCell);
+                }
+                
+                const today = new Date();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const gregorianDate = new Date(year, month, day);
+                    const weekday = gregorianDate.getDay();
+                    const isShabbat = weekday === 6;
+                    const isFriday = weekday === 5;
+                    const holiday = this.getHolidayForDate(gregorianDate, this.displayYear);
+                    const parsha = this.getParshaForDate(gregorianDate, this.displayYear);
+                    const hebrewDate = this.calculateHebrewDate(gregorianDate);
+                    const weekdayName = this.weekdays[weekday];
+                    const isToday = this.isToday(gregorianDate);
+                    
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'day-cell';
+                    if (isShabbat) dayCell.classList.add('shabbat');
+                    if (isFriday) dayCell.classList.add('friday');
+                    if (holiday) {
+                        if (holiday.type === 'holiday') dayCell.classList.add('holiday');
+                        if (holiday.type === 'fast') dayCell.classList.add('fast');
+                    }
+                    if (isToday) dayCell.classList.add('today');
+                    
+                    let dayInfo = '';
+                    if (parsha && isFriday) {
+                        dayInfo += `<div class="day-info parsha-indicator">${parsha}</div>`;
+                    }
+                    if (holiday) {
+                        const indicatorClass = holiday.type === 'fast' ? 'fast-indicator' : 'holiday-indicator';
+                        dayInfo += `<div class="day-info ${indicatorClass}">${holiday.name}</div>`;
+                    }
+                    
+                    dayCell.innerHTML = `
+                        <div class="gregorian-date">${day}</div>
+                        <div class="hebrew-date">${hebrewDate}</div>
+                        ${dayInfo}
+                    `;
+                    
+                    dayCell.addEventListener('click', () => {
+                        this.showDayDetails(gregorianDate, parsha, holiday, weekdayName);
+                    });
+                    
+                    daysGrid.appendChild(dayCell);
+                }
+                
+                card.appendChild(daysGrid);
+                return card;
+            }
+            
+            isToday(gregorianDate) {
+                const today = new Date();
+                return today.getDate() === gregorianDate.getDate() &&
+                       today.getMonth() === gregorianDate.getMonth() &&
+                       today.getFullYear() === gregorianDate.getFullYear();
+            }
+            
+            createYearCalendar() {
+                const container = document.getElementById('calendar-view');
+                container.innerHTML = '';
+                
+                const yearData = this.hebrewYears[this.displayYear];
+                if (!yearData) return;
+                
+                const startMonth = yearData.start.getMonth();
+                const startYear = yearData.start.getFullYear();
+                
+                const months = [];
+                for (let i = 0; i < 12; i++) {
+                    const date = new Date(startYear, startMonth + i, 1);
+                    months.push({
+                        month: date.getMonth(),
+                        year: date.getFullYear()
+                    });
+                }
+                
+                months.forEach(({ month, year }) => {
+                    const monthCard = this.createMonthCard(month, year);
+                    container.appendChild(monthCard);
+                });
+            }
+            
+            renderCalendar() {
+                this.createYearCalendar();
+            }
+            
+            updateHolidaysView() {
+                const grid = document.getElementById('holidays-grid');
+                grid.innerHTML = '';
+                
+                const holidays = this.getHolidaysForYear(this.displayYear);
+                holidays.forEach(holiday => {
+                    const card = document.createElement('div');
+                    card.className = `holiday-card ${holiday.type}`;
+                    
+                    const icon = holiday.type === 'fast' ? 'fa-moon' : 'fa-star-of-david';
+                    
+                    card.innerHTML = `
+                        <div class="holiday-title">
+                            <i class="fas ${icon}"></i> ${holiday.name}
+                        </div>
+                        <div class="holiday-date">
+                            <i class="fas fa-calendar-alt"></i> ${holiday.hebrewDate} ${this.getYearName(this.displayYear)}
+                        </div>
+                        <div class="holiday-date">
+                            <i class="fas fa-calendar"></i> ${holiday.gregorianDate}
+                        </div>
+                        <div class="holiday-desc">${holiday.desc}</div>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+            }
+            
+            updateParshiotView() {
+                const grid = document.getElementById('parshiot-grid');
+                grid.innerHTML = '';
+                
+                // הצגת פרשות השנה לפי הסדר
+                this.yearlyParshiot.forEach(parshaData => {
+                    const parshaName = parshaData.parsha;
+                    const parshaInfo = this.parshaDatabase[parshaName] || {
+                        summary: 'פרשה זו מופיעה בתורה ומהווה חלק מסיפור התורה',
+                        verses: 'פסוקים בתורה',
+                        topics: ['נושאים שונים']
+                    };
+                    
+                    const card = document.createElement('div');
+                    card.className = 'parsha-card';
+                    card.innerHTML = `
+                        <div class="parsha-title">
+                            <i class="fas fa-scroll"></i> פרשת ${parshaName}
+                        </div>
+                        <div class="parsha-date">
+                            <i class="fas fa-calendar-alt"></i> ${parshaData.date}
+                        </div>
+                        <div class="parsha-summary">${parshaInfo.summary}</div>
+                        <div style="margin-top: 10px;">
+                            <span class="source-tag"><i class="fas fa-scroll"></i> ${parshaInfo.verses}</span>
+                            ${parshaInfo.topics.slice(0, 3).map(topic => 
+                                `<span class="source-tag"><i class="fas fa-tag"></i> ${topic}</span>`
+                            ).join('')}
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', () => {
+                        this.showParshaModal(parshaName);
+                    });
+                    
+                    grid.appendChild(card);
+                });
+            }
+            
+            getParshaInfo(parshaName) {
+                return this.parshaDatabase[parshaName] || {
+                    summary: 'פרשה זו מופיעה בתורה ומהווה חלק מסיפור התורה',
+                    verses: 'פסוקים בתורה',
+                    topics: ['נושאים שונים'],
+                    detailedCommentary: `
+                        <div class="zohar-section">
+                            <h4><i class="fas fa-star-of-david"></i> פירוש הזוהר הקדוש:</h4>
+                            <p>הזוהר הקדוש דורש עניינים עמוקים בפרשת ${parshaName}.</p>
+                        </div>
+                        <div class="commentary-section">
+                            <h4><i class="fas fa-comment"></i> פירוש רש"י:</h4>
+                            <p>רש"י מסביר את הפסוקים בפרשת ${parshaName}.</p>
+                        </div>
+                    `,
+                    lessons: [
+                        'לימוד תורה בכל יום מחזק את הנשמה',
+                        'כל פרשה מכילה הדרכה לחיים טובים',
+                        'קיום המצוות מביא ברכה לחיים'
+                    ]
+                };
+            }
+            
+            showDayDetails(gregorianDate, parsha, holiday, weekdayName) {
+                const hebrewDate = this.calculateHebrewDate(gregorianDate);
+                const gregorianDisplay = gregorianDate.toLocaleDateString('he-IL');
+                const dayOfMonth = gregorianDate.getDate();
+                const month = gregorianDate.getMonth();
+                const year = gregorianDate.getFullYear();
+                
+                const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", 
+                                  "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+                
+                document.getElementById('day-modal-title').textContent = 
+                    `${weekdayName}, ${dayOfMonth} ב${monthNames[month]} ${year}`;
+                
+                let modalContent = `
+                    <div class="day-info-section">
+                        <div class="info-item">
+                            <div class="info-label">תאריך עברי</div>
+                            <div class="info-value">${hebrewDate} ${this.getYearName(this.displayYear)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">תאריך לועזי</div>
+                            <div class="info-value">${gregorianDisplay}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">יום בשבוע</div>
+                            <div class="info-value">${weekdayName}</div>
+                        </div>
+                    </div>
+                `;
+                
+                if (holiday || parsha) {
+                    modalContent += `<div class="day-details">`;
+                    
+                    if (holiday) {
+                        modalContent += `
+                            <div class="detail-title">
+                                <i class="fas ${holiday.type === 'fast' ? 'fa-moon' : 'fa-star-of-david'}"></i> ${holiday.name}
+                            </div>
+                            <div class="detail-content">
+                                <p>${holiday.desc}</p>
+                                ${holiday.type === 'fast' ? '<p><strong>זמני הצום:</strong> מהזריחה עד צאת הכוכבים</p>' : ''}
+                            </div>
+                        `;
+                    }
+                    
+                    if (parsha) {
+                        const parshaInfo = this.getParshaInfo(parsha);
+                        modalContent += `
+                            <div class="detail-title">
+                                <i class="fas fa-scroll"></i> פרשת השבוע
+                            </div>
+                            <div class="detail-content">
+                                <p><strong>פרשת ${parsha}</strong></p>
+                                <p>${parshaInfo.summary}</p>
+                                <p><strong>פסוקים:</strong> ${parshaInfo.verses}</p>
+                                <p><strong>נושאים מרכזיים:</strong> ${parshaInfo.topics.join(', ')}</p>
+                            </div>
+                        `;
+                    }
+                    
+                    modalContent += `</div>`;
+                }
+                
+                modalContent += `<div class="actions">`;
+                
+                if (parsha) {
+                    modalContent += `
+                        <button class="action-btn parsha-btn" onclick="calendar.showParshaModal('${parsha}')">
+                            <i class="fas fa-scroll"></i> פירוש מלא לפרשת ${parsha}
+                        </button>
+                    `;
+                }
+                
+                modalContent += `
+                    <button class="action-btn" onclick="calendar.closeDayModal()">
+                        <i class="fas fa-times"></i> סגירה
+                    </button>
+                `;
+                
+                modalContent += `</div>`;
+                
+                document.getElementById('day-modal-body').innerHTML = modalContent;
+                document.getElementById('day-modal').classList.add('active');
+            }
+            
+            showParshaModal(parshaName) {
+                const parshaInfo = this.getParshaInfo(parshaName);
+                
+                document.getElementById('parsha-modal-title').textContent = `פרשת ${parshaName}`;
+                
+                document.getElementById('parsha-modal-body').innerHTML = `
+                    <div class="parsha-meta">
+                        <div class="meta-item">
+                            <div class="meta-label">שם הפרשה</div>
+                            <div class="meta-value">${parshaName}</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">פסוקים</div>
+                            <div class="meta-value">${parshaInfo.verses}</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">נושאים מרכזיים</div>
+                            <div class="meta-value">${parshaInfo.topics.slice(0, 3).join(', ')}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="parsha-section">
+                        <div class="section-title">
+                            <i class="fas fa-info-circle"></i> תקציר הפרשה
+                        </div>
+                        <div class="section-content">
+                            <p>${parshaInfo.summary}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="parsha-section">
+                        <div class="section-title">
+                            <i class="fas fa-book-open"></i> פירושים מלאים
+                        </div>
+                        <div class="section-content">
+                            ${parshaInfo.detailedCommentary}
+                        </div>
+                    </div>
+                    
+                    <div class="parsha-section">
+                        <div class="section-title">
+                            <i class="fas fa-graduation-cap"></i> לקחים מרכזיים
+                        </div>
+                        <div class="section-content">
+                            <ul>
+                                ${parshaInfo.lessons.map(lesson => `<li>${lesson}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="actions">
+                        <button class="action-btn" onclick="calendar.closeParshaModal()">
+                            <i class="fas fa-times"></i> סגירה
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('parsha-modal').classList.add('active');
+            }
+            
+            closeDayModal() {
+                document.getElementById('day-modal').classList.remove('active');
+            }
+            
+            closeParshaModal() {
+                document.getElementById('parsha-modal').classList.remove('active');
+            }
+            
+            changeYear(delta) {
+                this.displayYear += delta;
+                this.updateDisplay();
+            }
+            
+            goToYear() {
+                const inputYear = parseInt(document.getElementById('yearInput').value);
+                if (inputYear >= 5700 && inputYear <= 5900) {
+                    this.displayYear = inputYear;
+                    this.updateDisplay();
+                } else {
+                    alert('אנא הכנס שנה עברית בין 5700 ל-5900');
+                }
+            }
+            
+            updateDisplay() {
+                this.updateTodayInfo();
+                this.renderCalendar();
+                this.updateHolidaysView();
+                this.updateParshiotView();
+            }
+            
+            setView(view) {
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                event.target.classList.add('active');
+                
+                document.getElementById('calendar-view').style.display = 'none';
+                document.getElementById('holidays-view').classList.remove('active');
+                document.getElementById('parshiot-view').classList.remove('active');
+                
+                switch(view) {
+                    case 'calendar':
+                        document.getElementById('calendar-view').style.display = 'grid';
+                        break;
+                    case 'holidays':
+                        document.getElementById('holidays-view').classList.add('active');
+                        break;
+                    case 'parshiot':
+                        document.getElementById('parshiot-view').classList.add('active');
+                        break;
+                }
+            }
+            
+            setupEventListeners() {
+                document.getElementById('day-modal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('day-modal')) {
+                        this.closeDayModal();
+                    }
+                });
+                
+                document.getElementById('parsha-modal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('parsha-modal')) {
+                        this.closeParshaModal();
+                    }
+                });
+            }
+        }
+        
+        let calendar;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            calendar = new CompleteHebrewCalendar();
+            
+            window.changeYear = (delta) => calendar.changeYear(delta);
+            window.goToYear = () => calendar.goToYear();
+            window.setView = (view) => calendar.setView(view);
+            window.closeDayModal = () => calendar.closeDayModal();
+            window.closeParshaModal = () => calendar.closeParshaModal();
+            window.calendar = calendar;
+        });
+    </script>
+</body>
+</html>

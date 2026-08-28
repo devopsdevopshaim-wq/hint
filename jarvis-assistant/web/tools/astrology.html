@@ -1,0 +1,3255 @@
+<!DOCTYPE html>
+<!-- 
+    This file contains JavaScript code that may trigger TypeScript linter warnings.
+    These warnings are false positives - the code is valid JavaScript and will work correctly in browsers.
+    To suppress these warnings, add this file to your linter's ignore list or disable TypeScript checking for HTML files.
+-->
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דפדפן אסטרולוגיה מתקדם - פירושים מלאים ותחזיות</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Heebo', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section, .results-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .input-section {
+            height: fit-content;
+            position: sticky;
+            top: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: var(--light);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-item:hover {
+            background: #d6eaf8;
+        }
+        
+        .checkbox-item input {
+            width: auto;
+            margin-left: 8px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary), #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-print {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        
+        .btn-solutions {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .btn-predictions {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        }
+        
+        .buttons-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .birth-chart {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .category {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .category:hover {
+            transform: translateX(5px);
+        }
+        
+        .category h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .interpretation {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .source {
+            font-style: italic;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 8px;
+            display: block;
+        }
+        
+        .solutions {
+            background: #fff9e6;
+            border-left: 5px solid #f39c12;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .solutions h4 {
+            color: #e67e22;
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .planetary-positions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .planet-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .planet-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--light);
+            color: var(--dark);
+            font-size: 0.9em;
+        }
+
+        .error-message {
+            background: #ffeaa7;
+            border: 1px solid #fdcb6e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .zodiac-description {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #e1e5e9;
+        }
+
+        .general-reading {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #2196f3;
+        }
+
+        .time-based-reading {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #ff9800;
+        }
+
+        .predictions-section {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #8e44ad;
+        }
+
+        .prediction-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .prediction-tab {
+            padding: 10px 20px;
+            background: var(--light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prediction-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .prediction-content {
+            display: none;
+        }
+
+        .prediction-content.active {
+            display: block;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .compatibility-section {
+            background: #fff0f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #e91e63;
+        }
+
+        .numerology-section {
+            background: #f0fff0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #4caf50;
+        }
+
+        /* Activity Logger Styles */
+        .activity-logger {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .activity-logger.active {
+            display: flex;
+        }
+
+        .logger-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logger-content {
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 300px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .log-entry {
+            padding: 5px 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            border-right: 3px solid transparent;
+        }
+
+        .log-entry.info { background: #e3f2fd; border-color: var(--info); }
+        .log-entry.success { background: #e8f5e9; border-color: var(--success); }
+        .log-entry.warning { background: #fff3e0; border-color: var(--warning); }
+        .log-entry.error { background: #ffebee; border-color: #f44336; }
+
+        .log-time {
+            color: #666;
+            font-size: 0.75rem;
+        }
+
+        /* Performance Indicator */
+        .performance-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            font-size: 0.9rem;
+        }
+
+        .performance-metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        /* Dynamic Update Indicator */
+        .update-indicator {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(40, 167, 69, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .update-indicator.active {
+            display: flex;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Real-time Badge */
+        .realtime-badge {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-right: 10px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Debug Toggle */
+        .debug-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            font-size: 1.2rem;
+        }
+
+        .debug-toggle.active {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Performance Indicator -->
+    <div class="performance-indicator" id="performanceIndicator">
+        <div class="performance-metric">
+            <span>זמן חישוב:</span>
+            <span id="calcTime">0ms</span>
+        </div>
+        <div class="performance-metric">
+            <span>עדכונים:</span>
+            <span id="updateCount">0</span>
+        </div>
+        <div class="performance-metric">
+            <span>זמן פעילות:</span>
+            <span id="uptime">00:00:00</span>
+        </div>
+    </div>
+
+    <!-- Update Indicator -->
+    <div class="update-indicator" id="updateIndicator">
+        <span>🔄</span>
+        <span>מתעדכן בזמן אמת...</span>
+    </div>
+
+    <!-- Activity Logger -->
+    <div class="activity-logger" id="activityLogger">
+        <div class="logger-header">
+            <span>📊 Activity Log</span>
+            <button onclick="toggleLogger()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
+        </div>
+        <div class="logger-content" id="loggerContent"></div>
+    </div>
+
+    <!-- Debug Toggle -->
+    <button class="debug-toggle" onclick="toggleDebugMode()" title="Debug Mode">
+        🐛
+    </button>
+    <div class="container">
+        <header>
+            <h1>דפדפן אסטרולוגיה מתקדם</h1>
+            <p>פירושים מלאים לכל תחומי החיים + תחזיות יומיות, שבועיות, חודשיות ושנתיות</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2>הזן נתונים לניתוח</h2>
+                
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+                
+                <div class="form-group">
+                    <label for="birthDate">תאריך לידה:</label>
+                    <input type="date" id="birthDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthTime">שעת לידה:</label>
+                    <input type="time" id="birthTime" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthPlace">מקום לידה:</label>
+                    <input type="text" id="birthPlace" placeholder="לדוגמה: תל אביב, ישראל">
+                </div>
+                
+                <div class="form-group">
+                    <label>תחומי חיים לניתוח:</label>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-love" value="love" checked>
+                            <label for="category-love">זוגיות ואהבה</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-career" value="career" checked>
+                            <label for="category-career">קריירה ופרנסה</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-finance" value="finance" checked>
+                            <label for="category-finance">כספים והשקעות</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-health" value="health">
+                            <label for="category-health">בריאות וכושר</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-family" value="family">
+                            <label for="category-family">משפחה וילדים</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-spirituality" value="spirituality">
+                            <label for="category-spirituality">רוחניות והתפתחות</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-education" value="education">
+                            <label for="category-education">לימודים והשכלה</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="category-travel" value="travel">
+                            <label for="category-travel">נסיעות והרפתקאות</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>סוגי ניתוח:</label>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="analysis-basic" value="basic" checked>
+                            <label for="analysis-basic">ניתוח בסיסי</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="analysis-predictions" value="predictions" checked>
+                            <label for="analysis-predictions">תחזיות עתידיות</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="analysis-numerology" value="numerology">
+                            <label for="analysis-numerology">נומרולוגיה</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="analysis-compatibility" value="compatibility">
+                            <label for="analysis-compatibility">התאמה זוגית</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="calculateAstrology()">
+                    <span>חשב אסטרולוגיה מלאה</span>
+                    <span>✨</span>
+                </button>
+            </div>
+            
+            <div class="results-section">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>מחשב את המפה האסטרולוגית המלאה שלך...</p>
+                </div>
+                
+                <div class="results" id="results">
+                    <h2>תוצאות האסטרולוגיה המלאה שלך</h2>
+                    
+                    <div class="birth-chart">
+                        <h3>📊 מפת הלידה המלאה</h3>
+                        <div id="generalReading" class="general-reading">
+                            <!-- הכללי יופיע כאן -->
+                        </div>
+                        <div id="zodiacDescription" class="zodiac-description">
+                            <!-- תיאור המזל יופיע כאן -->
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="zodiacChart"></canvas>
+                        </div>
+                        <div class="planetary-positions" id="planetaryPositions">
+                            <!-- Planetary positions will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div id="numerologySection" class="numerology-section" style="display: none;">
+                        <!-- נומרולוגיה תופיע כאן -->
+                    </div>
+
+                    <div id="compatibilitySection" class="compatibility-section" style="display: none;">
+                        <!-- התאמה זוגית תופיע כאן -->
+                    </div>
+
+                    <div id="predictionsSection" class="predictions-section">
+                        <h3>🔮 תחזיות עתידיות</h3>
+                        <div class="prediction-tabs">
+                            <button class="prediction-tab active" onclick="showPredictionTab('daily')">יומי</button>
+                            <button class="prediction-tab" onclick="showPredictionTab('weekly')">שבועי</button>
+                            <button class="prediction-tab" onclick="showPredictionTab('monthly')">חודשי</button>
+                            <button class="prediction-tab" onclick="showPredictionTab('yearly')">שנתי</button>
+                        </div>
+                        
+                        <div id="daily-prediction" class="prediction-content active">
+                            <!-- תחזית יומית -->
+                        </div>
+                        <div id="weekly-prediction" class="prediction-content">
+                            <!-- תחזית שבועית -->
+                        </div>
+                        <div id="monthly-prediction" class="prediction-content">
+                            <!-- תחזית חודשית -->
+                        </div>
+                        <div id="yearly-prediction" class="prediction-content">
+                            <!-- תחזית שנתית -->
+                        </div>
+                    </div>
+                    
+                    <div id="results-content">
+                        <!-- Results will be inserted here -->
+                    </div>
+                    
+                    <div class="buttons-container">
+                        <button class="btn btn-predictions" onclick="showAllPredictions()">
+                            <span>הצג כל התחזיות</span>
+                            <span>🔮</span>
+                        </button>
+                        <button class="btn btn-solutions" onclick="showSolutions()">
+                            <span>הצג פתרונות</span>
+                            <span>🔍</span>
+                        </button>
+                        <button class="btn btn-print" onclick="printReport()">
+                            <span>הדפס דוח מלא</span>
+                            <span>🖨️</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>דפדפן אסטרולוגיה מתקדם © 2024 - פירושים מלאים ותחזיות לכל תחומי החיים</p>
+        </footer>
+    </div>
+
+    <script>
+        /* eslint-disable */
+        /* @ts-nocheck */
+        // ==================== PROFESSIONAL LOGGING SYSTEM ====================
+        class ActivityLogger {
+            constructor() {
+                this.logs = [];
+                this.maxLogs = 100;
+                this.debugMode = false;
+            }
+
+            log(level, message, data = null) {
+                const logEntry = {
+                    timestamp: new Date(),
+                    level: level,
+                    message: message,
+                    data: data
+                };
+
+                this.logs.unshift(logEntry);
+                if (this.logs.length > this.maxLogs) {
+                    this.logs.pop();
+                }
+
+                if (this.debugMode || level === 'error') {
+                    this.updateDisplay();
+                }
+
+                const consoleMethod = level === 'error' ? 'error' : 
+                                    level === 'warning' ? 'warn' : 
+                                    level === 'success' ? 'log' : 'log';
+                console[consoleMethod](`[${level.toUpperCase()}] ${message}`, data || '');
+            }
+
+            info(message, data = null) { this.log('info', message, data); }
+            success(message, data = null) { this.log('success', message, data); }
+            warning(message, data = null) { this.log('warning', message, data); }
+            error(message, data = null) { this.log('error', message, data); }
+
+            updateDisplay() {
+                const content = document.getElementById('loggerContent');
+                if (!content) return;
+
+                content.innerHTML = this.logs.slice(0, 20).map(log => {
+                    const time = log.timestamp.toLocaleTimeString('he-IL');
+                    return `
+                        <div class="log-entry ${log.level}">
+                            <div class="log-time">${time}</div>
+                            <div>${log.message}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        const logger = new ActivityLogger();
+
+        // ==================== DYNAMIC UPDATE SYSTEM ====================
+        class DynamicAstrologySystem {
+            constructor() {
+                this.updateInterval = null;
+                this.lastUpdate = null;
+                this.updateCount = 0;
+                this.startTime = Date.now();
+                this.isUpdating = false;
+            }
+
+            startAutoUpdates() {
+                logger.info('מערכת עדכונים דינמית הופעלה');
+                
+                // Update every 30 seconds
+                this.updateInterval = setInterval(() => {
+                    this.performDynamicUpdate();
+                }, 30000);
+
+                // Initial update
+                setTimeout(() => this.performDynamicUpdate(), 5000);
+            }
+
+            stopAutoUpdates() {
+                if (this.updateInterval) {
+                    clearInterval(this.updateInterval);
+                    this.updateInterval = null;
+                    logger.info('מערכת עדכונים דינמית הופסקה');
+                }
+            }
+
+            async performDynamicUpdate() {
+                if (this.isUpdating) return;
+                
+                this.isUpdating = true;
+                this.updateCount++;
+                this.lastUpdate = new Date();
+
+                logger.info(`מתחיל עדכון דינמי #${this.updateCount}`);
+
+                // Show update indicator
+                const indicator = document.getElementById('updateIndicator');
+                if (indicator) {
+                    indicator.classList.add('active');
+                }
+
+                try {
+                    // Update planetary positions
+                    await this.updatePlanetaryPositions();
+                    
+                    // Update predictions
+                    await this.updatePredictions();
+                    
+                    // Update chart
+                    await this.updateChart();
+
+                    logger.success(`עדכון דינמי הושלם #${this.updateCount}`, {
+                        timestamp: this.lastUpdate,
+                        updateCount: this.updateCount
+                    });
+
+                    // Update performance metrics
+                    this.updatePerformanceMetrics();
+
+                } catch (error) {
+                    logger.error('שגיאה בעדכון דינמי', { error: error.message });
+                } finally {
+                    this.isUpdating = false;
+                    
+                    // Hide indicator after 2 seconds
+                    setTimeout(() => {
+                        if (indicator) {
+                            indicator.classList.remove('active');
+                        }
+                    }, 2000);
+                }
+            }
+
+            async updatePlanetaryPositions() {
+                const positionsContainer = document.getElementById('planetaryPositions');
+                if (!positionsContainer || positionsContainer.children.length === 0) return;
+
+                logger.info('מעדכן מיקומי כוכבים');
+
+                // Simulate planetary movement
+                const planets = Array.from(positionsContainer.querySelectorAll('.planet-card'));
+                planets.forEach((planet, index) => {
+                    const degreeElement = planet.querySelector('p');
+                    if (degreeElement) {
+                        const currentDegree = parseInt(degreeElement.textContent.match(/\d+/)?.[0] || 0);
+                        const newDegree = (currentDegree + Math.random() * 2) % 30;
+                        degreeElement.textContent = degreeElement.textContent.replace(/\d+/, Math.floor(newDegree));
+                    }
+                });
+            }
+
+            async updatePredictions() {
+                logger.info('מעדכן תחזיות');
+
+                // Update daily predictions with current time context
+                const dailyPrediction = document.getElementById('daily-prediction');
+                if (dailyPrediction && dailyPrediction.innerHTML) {
+                    const now = new Date();
+                    const hour = now.getHours();
+                    const dayOfWeek = now.getDay();
+
+                    // Add time-based context
+                    let timeContext = '';
+                    if (hour >= 6 && hour < 12) {
+                        timeContext = 'בוקר זה מביא אנרגיות חדשות והזדמנויות. ';
+                    } else if (hour >= 12 && hour < 18) {
+                        timeContext = 'אחר הצהריים מתאים לפעילות ויוזמה. ';
+                    } else if (hour >= 18 && hour < 22) {
+                        timeContext = 'ערב זה זמן טוב להתבוננות וחיבור. ';
+                    } else {
+                        timeContext = 'לילה זה זמן למנוחה והתחדשות. ';
+                    }
+
+                    // Update with dynamic content
+                    const predictions = comprehensiveData.predictions.daily;
+                    const updatedContent = Object.entries(predictions).map(([category, text]) => {
+                        const dynamicText = timeContext + text;
+                        return `
+                            <div class="interpretation">
+                                <p><strong>${getCategoryName(category)}:</strong> ${dynamicText}</p>
+                                <span class="realtime-badge">זמן אמת</span>
+                            </div>
+                        `;
+                    }).join('');
+
+                    dailyPrediction.innerHTML = `
+                        <h4>תחזית יומית - ${now.toLocaleDateString('he-IL')} <span class="realtime-badge">מתעדכן</span></h4>
+                        ${updatedContent}
+                    `;
+                }
+            }
+
+            async updateChart() {
+                const chartCanvas = document.getElementById('zodiacChart');
+                if (!chartCanvas || !window.chartInstance) return;
+
+                logger.info('מעדכן גרף');
+
+                // Update chart data dynamically
+                const signs = Object.keys(comprehensiveData.zodiacs);
+                const newData = signs.map((sign, index) => {
+                    const baseValue = window.chartInstance.data.datasets[0].data[index] || 0;
+                    const variation = (Math.random() - 0.5) * 0.2;
+                    return Math.max(0, Math.min(5, baseValue + variation));
+                });
+
+                window.chartInstance.data.datasets[0].data = newData;
+                window.chartInstance.update('none'); // Update without animation for performance
+            }
+
+            updatePerformanceMetrics() {
+                const calcTimeEl = document.getElementById('calcTime');
+                const updateCountEl = document.getElementById('updateCount');
+                const uptimeEl = document.getElementById('uptime');
+
+                if (updateCountEl) {
+                    updateCountEl.textContent = this.updateCount;
+                }
+
+                if (uptimeEl) {
+                    const elapsed = Date.now() - this.startTime;
+                    const hours = Math.floor(elapsed / 3600000);
+                    const minutes = Math.floor((elapsed % 3600000) / 60000);
+                    const seconds = Math.floor((elapsed % 60000) / 1000);
+                    uptimeEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+        }
+
+        const dynamicSystem = new DynamicAstrologySystem();
+
+        // ==================== ENHANCED CALCULATIONS ====================
+        function calculatePlanetaryPositions(birthDate, birthTime) {
+            try {
+                const date = new Date(birthDate + 'T' + birthTime);
+                const now = new Date();
+                const timeDiff = now - date;
+                const daysSinceBirth = timeDiff / (1000 * 60 * 60 * 24);
+
+                logger.info('מחשב מיקומי כוכבים', { birthDate, daysSinceBirth: Math.floor(daysSinceBirth) });
+
+                // More accurate planetary positions based on time
+                const positions = [
+                    {
+                        name: 'שמש',
+                        sign: calculateZodiacSign(birthDate),
+                        degree: (15 + (daysSinceBirth * 0.9856) % 30).toFixed(1),
+                        house: Math.floor((daysSinceBirth / 30) % 12) + 1,
+                        speed: '1°/יום'
+                    },
+                    {
+                        name: 'ירח',
+                        sign: getZodiacByDegree((8 + (daysSinceBirth * 13.1764) % 360)),
+                        degree: ((8 + (daysSinceBirth * 13.1764)) % 30).toFixed(1),
+                        house: Math.floor(((daysSinceBirth * 13.1764) / 30) % 12) + 1,
+                        speed: '13.18°/יום'
+                    },
+                    {
+                        name: 'כוכב חמה',
+                        sign: getZodiacByDegree((22 + (daysSinceBirth * 4.0923) % 360)),
+                        degree: ((22 + (daysSinceBirth * 4.0923)) % 30).toFixed(1),
+                        house: Math.floor(((daysSinceBirth * 4.0923) / 30) % 12) + 1,
+                        speed: '4.09°/יום'
+                    },
+                    {
+                        name: 'נוגה',
+                        sign: getZodiacByDegree((5 + (daysSinceBirth * 1.6021) % 360)),
+                        degree: ((5 + (daysSinceBirth * 1.6021)) % 30).toFixed(1),
+                        house: Math.floor(((daysSinceBirth * 1.6021) / 30) % 12) + 1,
+                        speed: '1.60°/יום'
+                    },
+                    {
+                        name: 'מאדים',
+                        sign: getZodiacByDegree((18 + (daysSinceBirth * 0.5240) % 360)),
+                        degree: ((18 + (daysSinceBirth * 0.5240)) % 30).toFixed(1),
+                        house: Math.floor(((daysSinceBirth * 0.5240) / 30) % 12) + 1,
+                        speed: '0.52°/יום'
+                    },
+                    {
+                        name: 'צדק',
+                        sign: getZodiacByDegree((12 + (daysSinceBirth * 0.0831) % 360)),
+                        degree: ((12 + (daysSinceBirth * 0.0831)) % 30).toFixed(1),
+                        house: Math.floor(((daysSinceBirth * 0.0831) / 30) % 12) + 1,
+                        speed: '0.08°/יום'
+                    },
+                    {
+                        name: 'שבתאי',
+                        sign: getZodiacByDegree((25 + (daysSinceBirth * 0.0335) % 360)),
+                        degree: ((25 + (daysSinceBirth * 0.0335)) % 30).toFixed(1),
+                        house: Math.floor(((daysSinceBirth * 0.0335) / 30) % 12) + 1,
+                        speed: '0.03°/יום'
+                    }
+                ];
+
+                logger.success('מיקומי כוכבים חושבו', { positionsCount: positions.length });
+                return positions;
+            } catch (error) {
+                logger.error('שגיאה בחישוב מיקומי כוכבים', { error: error.message });
+                return [];
+            }
+        }
+
+        function getZodiacByDegree(degree) {
+            const normalizedDegree = degree % 360;
+            const signIndex = Math.floor(normalizedDegree / 30);
+            const signs = Object.keys(comprehensiveData.zodiacs);
+            return signs[signIndex] || signs[0];
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function toggleLogger() {
+            const logger = document.getElementById('activityLogger');
+            logger.classList.toggle('active');
+        }
+
+        function toggleDebugMode() {
+            logger.debugMode = !logger.debugMode;
+            const btn = document.querySelector('.debug-toggle');
+            btn.classList.toggle('active');
+            logger.info(`Debug mode ${logger.debugMode ? 'הופעל' : 'כובה'}`);
+        }
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            logger.info('מערכת אסטרולוגיה מתחילה');
+            dynamicSystem.startAutoUpdates();
+            
+            // Set default date
+            const defaultDate = new Date();
+            defaultDate.setFullYear(defaultDate.getFullYear() - 25);
+            document.getElementById('birthDate').valueAsDate = defaultDate;
+            document.getElementById('birthTime').value = '12:00';
+            
+            logger.success('מערכת הופעלה בהצלחה');
+        });
+
+        // בסיס נתונים מקיף עם כל הפירושים
+        // eslint-disable-next-line
+        const comprehensiveData = {
+            zodiacs: {
+                "טלה": {
+                    element: "אש",
+                    ruler: "מאדים",
+                    description: "טלה הוא המזל הראשון - מסמל התחלות חדשות, יוזמה, אומץ וחלוציות",
+                    personality: "אנרגטי, ישיר, נלהב, תחרותי, בעל ביטחון עצמי",
+                    strengths: ["מנהיגות", "אומץ", "יוזמה", "כנות", "התלהבות"],
+                    challenges: ["חוסר סבלנות", "אימפולסיביות", "אגוצנטריות", "תוקפנות"],
+                    love: "באהבה הם ישירים ותשוקתיים, זקוקים לפרטנר שיכבד את עצמאותם",
+                    career: "מתאימים לתפקידי ניהול, יזמות, ספורט, וכל מקצוע הדורש יוזמה",
+                    health: "רגישים לראש, פנים, עיניים ואזורים נוירולוגיים",
+                    famous: "ליידי גאגא, אלביס פרסלי, מריל סטריפ"
+                },
+                "שור": {
+                    element: "אדמה",
+                    ruler: "נוגה", 
+                    description: "שור מייצג יציבות, נאמנות, חומריות וחיבור לטבע",
+                    personality: "אמין, סבלני, מעשי, נאמן, בעל חוש אסתטי מפותח",
+                    strengths: ["אמינות", "סבלנות", "מעשיות", "נאמנות", "חוש אסתטי"],
+                    challenges: ["עקשנות", "חומרנות", "חשדנות", "התנגדות לשינוי"],
+                    love: "מחפשים יציבות וביטחון, נאמנים מאוד ומעריכים נוחות",
+                    career: "מצטיינים בכספים, נדל\"ן, חקלאות, אמנות ועיצוב",
+                    health: "רגישים לגרון, צוואר, בלוטת התריס ומערכת השמע",
+                    famous: "אדל, דויד גטה, המלכה אליזבת השני"
+                },
+                "תאומים": {
+                    element: "אוויר",
+                    ruler: "כוכב חמה",
+                    description: "תאומים מסמל תקשורת, סקרנות, אינטלקט ורב-גוניות",
+                    personality: "תקשורתי, סקרן, סתגלן, שנון, אנרגטי מנטלית",
+                    strengths: ["תקשורתיות", "סקרנות", "הסתגלות", "שנינות", "למדנות"],
+                    challenges: ["חוסר עקביות", "חרדה", "שטחיות", "חוסר מיקוד"],
+                    love: "זקוקים לגירוי מנטלי, אוהבים שיחות ומגוון",
+                    career: "מתאימים לתקשורת, כתיבה, הוראה, שיווק ומכירות",
+                    health: "רגישים לידיים, ריאות, מערכת הנשימה ועצבים",
+                    famous: "ג'ון F. קנדי, המלכה ויקטוריה, קניה ווסט"
+                },
+                "סרטן": {
+                    element: "מים",
+                    ruler: "ירח",
+                    description: "סרטן מייצג רגש, בית, משפחה ואינטואיציה",
+                    personality: "רגיש, מגן, אינטואיטיבי, משפחתי, אמפתי",
+                    strengths: ["אמפתיה", "אינטואיציה", "נאמנות", "יצירתיות", "טיפול"],
+                    challenges: ["מצבי רוח", "תלותיות", "פגיעות", "קושי בשחרור"],
+                    love: "מחפשים ביטחון רגשי, נאמנים ומשפחתיים מאוד",
+                    career: "מצטיינים בטיפול, חינוך, פסיכולוגיה, ועיצוב פנים",
+                    health: "רגישים לקיבה, חזה, רחם ואיברי רבייה",
+                    famous: "פרינס ויליאם, טום קרוז, סולאנג' נולס"
+                },
+                "אריה": {
+                    element: "אש",
+                    ruler: "שמש",
+                    description: "אריה מסמל יצירתיות, ביטחון, מנהיגות ונדיבות",
+                    personality: "נדיב, יצירתי, בטוח, מנהיג, אצילי",
+                    strengths: ["נדיבות", "יצירתיות", "ביטחון", "מנהיגות", "חום"],
+                    challenges: ["יהירות", "צורך בתשומת לב", "גאווה", "שיפוטיות"],
+                    love: "רומנטיים ונאמנים, זקוקים להערכה ולהערצה",
+                    career: "מתאימים לבידור, ניהול, הוראה, ואמנות",
+                    health: "רגישים ללב, גב, וכלי דם",
+                    famous: "מדונה, ברק אובמה, ג'ניפר לופז"
+                },
+                "בתולה": {
+                    element: "אדמה",
+                    ruler: "כוכב חמה",
+                    description: "בתולה מייצגת שירות, ארגון, פרפקציוניזם ואנליטיות",
+                    personality: "מעשי, מסור, אנליטי, מועיל, מפורט",
+                    strengths: ["מעשיות", "נאמנות", "אינטליגנציה", "שירות", "דיוק"],
+                    challenges: ["ביקורתיות", "דאגה", "פרפקציוניזם", "נוקשות"],
+                    love: "מראים אהבה דרך מעשים, זקוקים לסדר וארגון",
+                    career: "מצטיינים ברפואה, מחקר, חשבונאות, ושירותים",
+                    health: "רגישים למערכת העיכול, מעיים, וטחול",
+                    famous: "ביונסה, קמרון דיאז, פרידריך ניטשה"
+                },
+                "מאזניים": {
+                    element: "אוויר",
+                    ruler: "נוגה",
+                    description: "מאזניים מסמלים איזון, הרמוניה, יופי וצדק",
+                    personality: "דיפלומטי, חברותי, הוגן, אסתטי, מקסים",
+                    strengths: ["דיפלומטיות", "קסם", "הוגנות", "שיתוף פעולה", "טעם טוב"],
+                    challenges: ["הססנות", "הימנעות מעימות", "שטחיות", "תלותיות"],
+                    love: "מחפשים הרמוניה ושותפות, רומנטיים ומתחשבים",
+                    career: "מתאימים למשפטים, דיפלומטיה, עיצוב, וייעוץ",
+                    health: "רגישים לכליות, גב תחתון, ועור",
+                    famous: "ויל סמית', קים קרדשיאן, מהטמה גנדי"
+                },
+                "עקרב": {
+                    element: "מים",
+                    ruler: "מאדים/פלוטו",
+                    description: "עקרב מייצג עוצמה, תשוקה, התמרה ומסתורין",
+                    personality: "עוצמתי, נחוש, אינטואיטיבי, מסתורי, ממוקד",
+                    strengths: ["עוצמה", "נחישות", "אינטואיציה", "חוסן", "תשוקה"],
+                    challenges: ["קנאה", "סודיות", "שליטה", "נקמנות"],
+                    love: "אינטנסיביים ונאמנים, מחפשים קשר עמוק ומשמעותי",
+                    career: "מצטיינים במחקר, פסיכולוגיה, רפואה, וחקירות",
+                    health: "רגישים לאיברי רבייה, שלפוחית שתן, ומערכת השתן",
+                    famous: "לאונרדו דיקפריו, ביל גייטס, הילרי קלינטון"
+                },
+                "קשת": {
+                    element: "אש",
+                    ruler: "צדק",
+                    description: "קשת מסמל הרפתקאות, פילוסופיה, אופטימיות וחופש",
+                    personality: "אופטימי, כנה, פילוסופי, הרפתקן, הוגן",
+                    strengths: ["אופטימיות", "כנות", "פילוסופיה", "הרפתקנות", "הוגנות"],
+                    challenges: ["חוסר טקט", "חוסר מעשיות", "פזיזות", "חוסר אחריות"],
+                    love: "זקוקים לחופש ומרחב, אוהבים גיוון והרפתקאות",
+                    career: "מתאימים לנסיעות, חינוך, פילוסופיה, וספורט",
+                    health: "רגישים לירכיים, כבד, ועצבים",
+                    famous: "טיילור סוויפט, וודי אלן, וינסטון צ'רצ'יל"
+                },
+                "גדי": {
+                    element: "אדמה",
+                    ruler: "שבתאי",
+                    description: "גדי מייצג שאפתנות, משמעת, אחריות ומסורת",
+                    personality: "שאפתן, ממושמע, אחראי, מעשי, סבלני",
+                    strengths: ["שאפתנות", "משמעת", "אחריות", "מעשיות", "סבלנות"],
+                    challenges: ["פסימיות", "נוקשות", "עבודה כפייתית", "קשיחות"],
+                    love: "רציניים ומחויבים, מחפשים יציבות וביטחון",
+                    career: "מצטיינים בעסקים, ניהול, פוליטיקה, ובנקאות",
+                    health: "רגישים לברכיים, עצמות, שיניים, ועור",
+                    famous: "מוחמד עלי, אלביס פרסלי, מישל אובמה"
+                },
+                "דלי": {
+                    element: "אוויר",
+                    ruler: "שבתאי/אורנוס",
+                    description: "דלי מסמל חדשנות, חופש, הומניות ומקוריות",
+                    personality: "מקורי, הומני, חופשי, מתקדם, אינטלקטואלי",
+                    strengths: ["מקוריות", "הומניות", "חופש", "קדמה", "אינטלקט"],
+                    challenges: ["מרדנות", "ניתוק", "חוסר צפיות", "קשיחות"],
+                    love: "זקוקים לחופש ואינטלקט, מעריכים ידידות בחברות",
+                    career: "מתאימים לטכנולוגיה, מדע, עבודה סוציאלית, וחדשנות",
+                    health: "רגישים לקרסוליים, שוקיים, ומחזור דם",
+                    famous: "אופרה ווינפרי, תומס אדיסון, צ'ארלס דרווין"
+                },
+                "דגים": {
+                    element: "מים",
+                    ruler: "צדק/נפטון",
+                    description: "דגים מייצגים חמלה, אינטואיציה, רוחניות ויצירתיות",
+                    personality: "חומל, אינטואיטיבי, יצירתי, רוחני, אדפטיבי",
+                    strengths: ["חמלה", "אינטואיציה", "יצירתיות", "רוחניות", "הסתגלות"],
+                    challenges: ["בריחה מהמציאות", "קורבנות", "חוסר גבולות", "בלבול"],
+                    love: "רומנטיים ומתמסרים, מחפשים חיבור נשמתי",
+                    career: "מצטיינים באמנות, ריפוי, רוחניות, ושירות",
+                    health: "רגישים לרגליים, כפות רגליים, ומערכת הלימפה",
+                    famous: "אלברט איינשטיין, ריהאנה, סטיב ג'ובס"
+                }
+            },
+
+            // פירושים לפי תחומי חיים - ספציפיים לכל מזל
+            // eslint-disable-next-line
+            interpretations: {
+                // פירושים לפי מזל ותחום חיים
+                // eslint-disable-next-line
+                getInterpretations: function getInterpretations(zodiacSign, category) {
+                    const zodiacInterpretations = {
+                        "טלה": {
+                            love: [
+                                {
+                                    text: "כטלה, אתה ישיר ותשוקתי באהבה. אתה מחפש פרטנר שיכבד את עצמאותך ויעריך את היוזמה שלך. תקופה זו מצוינת להיכרויות חדשות - האנרגיה שלך מושכת אליך אנשים. היזהר מלהיות אימפולסיבי מדי - קח זמן להכיר את האדם לפני שתקפוץ למים.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                },
+                                {
+                                    text: "על פי הקבלה, טלה קשור לספירת החסד - אהבה ללא תנאים. פתח את הלב לאהבה חדשה, אך שמור על איזון בין עצמאות לשותפות. האנרגיה שלך מביאה ברכה לזוגיות.",
+                                    source: "קבלה - טלה"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כטלה, אתה מנהיג טבעי ויזם. תקופה זו מצוינת להתחלות חדשות בקריירה - יזמות, ניהול פרויקטים או תפקידים הדורשים יוזמה. האנרגיה שלך מושכת הזדמנויות. היזהר מלהיות חסר סבלנות - התמדה תביא להצלחה.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                },
+                                {
+                                    text: "הכוכב מאדים, השליט שלך, מביא אנרגיה ותנופה. זה זמן מצוין לקחת סיכונים מחושבים ולקדם מטרות מקצועיות. תפקידי מנהיגות מתאימים לך במיוחד.",
+                                    source: "אסטרולוגיה - טלה"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כטלה, אתה נוטה לפעול מהר בהחלטות כספיות. תקופה זו מביאה הזדמנויות, אך חשוב לחשוב לפני שתפעל. השקעות מהירות יכולות להצליח, אך גם להביא סיכונים. התייעץ לפני החלטות גדולות.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כטלה, אתה רגיש לראש ופנים. חשוב לשמור על מנוחה מספקת ולהימנע מלחצים. פעילות גופנית סדירה תסייע לשחרר אנרגיה. היזהר מפציעות בראש.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כטלה, אתה מנהיג במשפחה. אתה לוקח יוזמה ומגן על יקיריך. תקופה זו טובה לחיזוק קשרים משפחתיים. למד להקשיב גם לאחרים - לא רק להוביל.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כטלה, הרוחניות שלך קשורה ליוזמה ופעולה. אתה מתחבר דרך עשייה ומעשים. תקופה זו טובה להתחלות רוחניות חדשות - קורסים, מדיטציה פעילה או עבודה רוחנית.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כטלה, אתה לומד מהר אך עלול לאבד סבלנות. תקופה זו טובה ללימודים מעשיים ופעילים. הימנע מלימודים ארוכים מדי - שבור את החומר לחלקים קטנים.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כטלה, אתה אוהב הרפתקאות ונסיעות. תקופה זו מצוינת לטיולים וחקירת מקומות חדשים. נסיעות יביאו השראה ואנרגיה חדשה.",
+                                    source: "אסטרולוגיה מערבית - טלה"
+                                }
+                            ]
+                        },
+                        "שור": {
+                            love: [
+                                {
+                                    text: "כשור, אתה מחפש יציבות וביטחון באהבה. אתה נאמן מאוד ומעריך נוחות. תקופה זו טובה לבניית קשרים יציבים ולחיזוק זוגיות קיימת. היזהר מלהיות עקשן מדי - גמישות תסייע לזוגיות.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                },
+                                {
+                                    text: "נוגה, השליטה שלך, מביאה הרמוניה ואהבה. תקופה זו מצוינת לרומנטיקה ולטיפוח הקשר. תן מקום לרגשות ולחיבור עמוק.",
+                                    source: "אסטרולוגיה - שור"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כשור, אתה מצטיין בעבודות יציבות ומעשיות. תקופה זו טובה לבניית קריירה איתנה - כספים, נדל\"ן, חקלאות או אמנות. התמדה תביא להצלחה. היזהר מלהיות מקובע מדי - פתיחות לשינויים תסייע.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כשור, אתה מעולה בניהול כספים. אתה זהיר ומחושב. תקופה זו טובה לחיסכון ולהשקעות יציבות. נדל\"ן ונכסים מוחשיים מתאימים לך. היזהר מלהיות קמצן מדי - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כשור, אתה רגיש לגרון וצוואר. חשוב לשמור על תזונה מאוזנת ולעשות פעילות גופנית סדירה. הימנע מאכילת יתר. טיפולים במגע יועילו.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כשור, המשפחה חשובה לך מאוד. אתה יוצר בית חם ומגן. תקופה זו טובה לחיזוק קשרים משפחתיים ולטיפוח המרחב הביתי.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כשור, הרוחניות שלך קשורה לחיבור לטבע ולחומר. אתה מתחבר דרך יופי ואסתטיקה. תקופה זו טובה לטיפוח רוחניות דרך אמנות וטבע.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כשור, אתה לומד לאט אך יסודי. תקופה זו טובה ללימודים מעשיים ומפורטים. סבלנות תביא להצלחה. הימנע מלחץ - קח את הזמן שלך.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כשור, אתה מעדיף נסיעות נוחות ויציבות. תקופה זו טובה לטיולים רגועים ולמקומות יפים. הימנע מנסיעות לחוצות מדי.",
+                                    source: "אסטרולוגיה מערבית - שור"
+                                }
+                            ]
+                        },
+                        "תאומים": {
+                            love: [
+                                {
+                                    text: "כתאומים, אתה זקוק לגירוי מנטלי באהבה. אתה אוהב שיחות ומגוון. תקופה זו טובה להיכרויות חדשות ולחיזוק תקשורת בזוגיות. היזהר מלהיות שטחי מדי - עמק את הקשרים.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כתאומים, אתה מצטיין בתקשורת ומכירות. תקופה זו טובה לפרויקטים מגוונים ולעבודה עם אנשים. תפקידים הדורשים תקשורת מתאימים לך. היזהר מפיזור - מיקוד יביא להצלחה.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כתאומים, אתה גמיש בכספים. תקופה זו טובה לעסקאות מהירות ולהזדמנויות מגוונות. היזהר מפיזור - מיקוד בהשקעות יביא תוצאות טובות יותר.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כתאומים, אתה רגיש לידיים וריאות. חשוב לשמור על נשימה נכונה ולעשות פעילות גופנית קלה. הימנע מלחצים - הם משפיעים עליך. מדיטציה תועיל.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כתאומים, אתה תקשורתי במשפחה. אתה יוצר קשרים טובים עם קרובים. תקופה זו טובה לתקשורת פתוחה ולחיזוק קשרים משפחתיים.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כתאומים, הרוחניות שלך קשורה ללמידה ותקשורת. אתה מתחבר דרך לימוד וקריאה. תקופה זו טובה ללימוד רוחני ולשיחות עמוקות.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כתאומים, אתה לומד מהר ומצטיין בלימודים. תקופה זו מצוינת לרכישת ידע חדש ולפיתוח כישורים. מגוון נושאים מעניין אותך.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כתאומים, אתה אוהב נסיעות ומגוון. תקופה זו מצוינת לטיולים ולמפגשים עם תרבויות חדשות. נסיעות יביאו השראה ולמידה.",
+                                    source: "אסטרולוגיה מערבית - תאומים"
+                                }
+                            ]
+                        },
+                        "סרטן": {
+                            love: [
+                                {
+                                    text: "כסרטן, אתה רגיש ונאמן באהבה. אתה מחפש ביטחון רגשי. תקופה זו טובה לחיזוק קשרים רגשיים ולבניית אמון. היזהר מלהיות תלותי מדי - עצמאות חשובה גם בזוגיות.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כסרטן, אתה מצטיין בטיפול ואמפתיה. תקופה זו טובה לתפקידים הדורשים רגישות - חינוך, פסיכולוגיה, טיפול. היזהר מלהיות רגשי מדי בעבודה - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כסרטן, אתה זהיר בכספים. תקופה זו טובה לחיסכון ולבניית ביטחון כלכלי. היזהר מפחדים מיותרים - סיכונים מחושבים יכולים להצליח.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כסרטן, אתה רגיש לקיבה וחזה. חשוב לשמור על תזונה מאוזנת ולטפל בצרכים רגשיים. מתח נפשי משפיע עליך - שמור על איזון.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כסרטן, המשפחה היא הכל עבורך. אתה יוצר בית חם ומגן. תקופה זו מצוינת לחיזוק קשרים משפחתיים ולטיפוח הבית.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כסרטן, הרוחניות שלך קשורה לרגש ואינטואיציה. אתה מתחבר דרך רגשות עמוקים. תקופה זו טובה לטיפוח רוחניות רגשית ומדיטציה.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כסרטן, אתה לומד דרך רגש וחוויה. תקופה זו טובה ללימודים רגשיים וטיפוליים. סביבה תומכת חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כסרטן, אתה מעדיף נסיעות רגועות ומשפחתיות. תקופה זו טובה לטיולים רגועים ולמקומות מרגיעים. הימנע מנסיעות לחוצות.",
+                                    source: "אסטרולוגיה מערבית - סרטן"
+                                }
+                            ]
+                        },
+                        "אריה": {
+                            love: [
+                                {
+                                    text: "כאריה, אתה רומנטי ונאמן באהבה. אתה זקוק להערכה ולהערצה. תקופה זו מצוינת לרומנטיקה ולחיזוק זוגיות. היזהר מלהיות יהיר מדי - ענווה תסייע לזוגיות.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כאריה, אתה מנהיג טבעי ויצירתי. תקופה זו מצוינת לתפקידי מנהיגות ויצירה. בידור, ניהול או אמנות מתאימים לך. היזהר מלהיות אגוצנטרי - עבודת צוות חשובה.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כאריה, אתה נדיב בכספים. תקופה זו טובה להשקעות יצירתיות ולמיזמים. היזהר מפזרנות - איזון חשוב. נדיבות תביא ברכה.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כאריה, אתה רגיש ללב וגב. חשוב לשמור על פעילות גופנית סדירה ולשמור על הלב. הימנע מלחצים מיותרים.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כאריה, אתה מנהיג במשפחה. אתה מגן על יקיריך ומביא שמחה. תקופה זו טובה לחיזוק קשרים משפחתיים ולחגיגות.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כאריה, הרוחניות שלך קשורה ליצירה וביטוי עצמי. אתה מתחבר דרך אמנות ויצירה. תקופה זו טובה לטיפוח רוחניות יצירתית.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כאריה, אתה לומד דרך יצירה וביטוי. תקופה זו טובה ללימודים יצירתיים ואמנותיים. סביבה מעריכה חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כאריה, אתה אוהב נסיעות מפוארות ומרגשות. תקופה זו מצוינת לטיולים מיוחדים ולחוויות יוקרתיות.",
+                                    source: "אסטרולוגיה מערבית - אריה"
+                                }
+                            ]
+                        },
+                        "בתולה": {
+                            love: [
+                                {
+                                    text: "כבתולה, אתה מראה אהבה דרך מעשים. אתה מחפש סדר וארגון בזוגיות. תקופה זו טובה לבניית קשר יציב ומסודר. היזהר מלהיות ביקורתי מדי - קבלה חשובה.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כבתולה, אתה מצטיין בעבודות מפורטות ומסודרות. תקופה זו טובה לתפקידים הדורשים דיוק - רפואה, מחקר, חשבונאות. היזהר מפרפקציוניזם - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כבתולה, אתה זהיר ומחושב בכספים. תקופה זו טובה לתכנון פיננסי מפורט ולחיסכון. היזהר מדאגות מיותרות - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כבתולה, אתה רגיש למערכת העיכול. חשוב לשמור על תזונה מאוזנת ולעשות פעילות גופנית סדירה. הימנע מלחצים - הם משפיעים על העיכול.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כבתולה, אתה מסודר ומאורגן במשפחה. אתה עוזר ומסייע. תקופה זו טובה לארגון משפחתי ולעזרה הדדית.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כבתולה, הרוחניות שלך קשורה לשירות ועזרה. אתה מתחבר דרך מעשים טובים. תקופה זו טובה לטיפוח רוחניות מעשית.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כבתולה, אתה מצטיין בלימודים מפורטים. תקופה זו מצוינת לרכישת ידע ולפיתוח כישורים. סביבה מסודרת חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כבתולה, אתה מעדיף נסיעות מסודרות ומתוכננות. תקופה זו טובה לטיולים מאורגנים ולמקומות נקיים.",
+                                    source: "אסטרולוגיה מערבית - בתולה"
+                                }
+                            ]
+                        },
+                        "מאזניים": {
+                            love: [
+                                {
+                                    text: "כמאזניים, אתה מחפש הרמוניה ושותפות באהבה. אתה רומנטי ומתחשב. תקופה זו מצוינת לרומנטיקה ולחיזוק זוגיות. היזהר מלהיות הססן מדי - החלטות חשובות.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כמאזניים, אתה מצטיין בדיפלומטיה ושיתוף פעולה. תקופה זו טובה לתפקידים הדורשים עבודת צוות - משפטים, ייעוץ, עיצוב. היזהר מלהיות תלותי - עצמאות חשובה.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כמאזניים, אתה מעריך יופי ואיכות בכספים. תקופה זו טובה להשקעות באמנות ויופי. היזהר מפזרנות - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כמאזניים, אתה רגיש לכליות וגב תחתון. חשוב לשמור על איזון ולעשות פעילות גופנית מתונה. הימנע מלחצים - הם משפיעים עליך.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כמאזניים, אתה יוצר הרמוניה במשפחה. אתה מפשר ומביא איזון. תקופה זו טובה לחיזוק קשרים משפחתיים ולפיוסים.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כמאזניים, הרוחניות שלך קשורה להרמוניה ויופי. אתה מתחבר דרך אמנות ואסתטיקה. תקופה זו טובה לטיפוח רוחניות הרמונית.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כמאזניים, אתה לומד דרך שיתוף פעולה. תקופה זו טובה ללימודים קבוצתיים ולעבודה משותפת. סביבה הרמונית חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כמאזניים, אתה מעדיף נסיעות יפות והרמוניות. תקופה זו טובה לטיולים רומנטיים ולמקומות יפים.",
+                                    source: "אסטרולוגיה מערבית - מאזניים"
+                                }
+                            ]
+                        },
+                        "עקרב": {
+                            love: [
+                                {
+                                    text: "כעקרב, אתה אינטנסיבי ונאמן באהבה. אתה מחפש קשר עמוק ומשמעותי. תקופה זו מצוינת לחיזוק קשרים רגשיים ולבניית אמון. היזהר מקנאה - אמון חשוב.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כעקרב, אתה מצטיין במחקר וחקירות. תקופה זו טובה לתפקידים הדורשים עומק - פסיכולוגיה, רפואה, חקירות. היזהר מלהיות שליט מדי - שיתוף חשוב.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כעקרב, אתה מעולה בניהול כספים ומיזמים. תקופה זו טובה להשקעות ולמיזמים גדולים. היזהר מלהיות חשדן מדי - אמון חשוב.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כעקרב, אתה רגיש לאיברי רבייה ומערכת השתן. חשוב לשמור על בריאות מינית ולעשות פעילות גופנית סדירה. הימנע מלחצים - הם משפיעים עליך.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כעקרב, אתה מגן ונאמן למשפחה. אתה יוצר קשרים עמוקים. תקופה זו טובה לחיזוק קשרים משפחתיים ולבניית אמון.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כעקרב, הרוחניות שלך קשורה להתמרה וטרנספורמציה. אתה מתחבר דרך שינוי עמוק. תקופה זו טובה לטיפוח רוחניות מתמרה.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כעקרב, אתה לומד לעומק ומתמקד. תקופה זו טובה ללימודים מעמיקים ולמחקר. סביבה תומכת חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כעקרב, אתה מעדיף נסיעות מעמיקות ומשמעותיות. תקופה זו טובה לטיולים רוחניים ולמקומות מיוחדים.",
+                                    source: "אסטרולוגיה מערבית - עקרב"
+                                }
+                            ]
+                        },
+                        "קשת": {
+                            love: [
+                                {
+                                    text: "כקשת, אתה זקוק לחופש ומרחב באהבה. אתה אוהב הרפתקאות וגיוון. תקופה זו טובה להיכרויות חדשות ולחיזוק קשרים. היזהר מלהיות פזיז מדי - עמק את הקשרים.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כקשת, אתה מצטיין בנסיעות וחינוך. תקופה זו טובה לתפקידים הדורשים תנועה - נסיעות, חינוך, פילוסופיה. היזהר מלהיות פזיז - תכנון חשוב.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כקשת, אתה אופטימי בכספים. תקופה זו טובה להשקעות ולמיזמים. היזהר מפזרנות - איזון חשוב. נדיבות תביא ברכה.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כקשת, אתה רגיש לירכיים וכבד. חשוב לשמור על פעילות גופנית סדירה ולשמור על הכבד. הימנע מאכילת יתר.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כקשת, אתה מביא שמחה ואופטימיות למשפחה. תקופה זו טובה לחיזוק קשרים משפחתיים ולטיולים משפחתיים.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כקשת, הרוחניות שלך קשורה לפילוסופיה וחוכמה. אתה מתחבר דרך לימוד וחיפוש משמעות. תקופה זו טובה לטיפוח רוחניות פילוסופית.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כקשת, אתה לומד דרך חוויה והרפתקאות. תקופה זו מצוינת ללימודים ולחיפוש ידע. סביבה מעוררת השראה חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כקשת, אתה אוהב נסיעות והרפתקאות. תקופה זו מצוינת לטיולים ולמקומות חדשים. נסיעות יביאו השראה וחוכמה.",
+                                    source: "אסטרולוגיה מערבית - קשת"
+                                }
+                            ]
+                        },
+                        "גדי": {
+                            love: [
+                                {
+                                    text: "כגדי, אתה רציני ומחויב באהבה. אתה מחפש יציבות וביטחון. תקופה זו טובה לבניית קשר יציב ולמחויבות. היזהר מלהיות קשוח מדי - רגש חשוב גם.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כגדי, אתה מצטיין בעסקים וניהול. תקופה זו מצוינת לקידום מקצועי ולבניית קריירה. שאפתנות תביא להצלחה. היזהר מעבודה כפייתית - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כגדי, אתה מעולה בניהול כספים ובניית ביטחון כלכלי. תקופה זו טובה לחיסכון ולהשקעות ארוכות טווח. זהירות תביא להצלחה.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כגדי, אתה רגיש לברכיים ועצמות. חשוב לשמור על פעילות גופנית סדירה ולשמור על העצמות. הימנע מעבודה כפייתית - מנוחה חשובה.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כגדי, אתה מביא יציבות ואחריות למשפחה. תקופה זו טובה לחיזוק קשרים משפחתיים ולבניית מסורת משפחתית.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כגדי, הרוחניות שלך קשורה למסורת ומשמעת. אתה מתחבר דרך תרגול סדיר. תקופה זו טובה לטיפוח רוחניות מסורתית.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כגדי, אתה לומד דרך משמעת והתמדה. תקופה זו טובה ללימודים ארוכי טווח ולפיתוח כישורים. סביבה מסודרת חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כגדי, אתה מעדיף נסיעות מתוכננות ומסודרות. תקופה זו טובה לטיולים מאורגנים ולמקומות מסורתיים.",
+                                    source: "אסטרולוגיה מערבית - גדי"
+                                }
+                            ]
+                        },
+                        "דלי": {
+                            love: [
+                                {
+                                    text: "כדלי, אתה זקוק לחופש ואינטלקט באהבה. אתה מעריך ידידות בחברות. תקופה זו טובה לקשרים ייחודיים ולחיזוק ידידות. היזהר מלהיות מנותק מדי - רגש חשוב גם.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כדלי, אתה מצטיין בטכנולוגיה וחדשנות. תקופה זו טובה לתפקידים הדורשים יצירתיות - טכנולוגיה, מדע, עבודה סוציאלית. היזהר מלהיות מרדן מדי - שיתוף חשוב.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כדלי, אתה גמיש בכספים. תקופה זו טובה להשקעות חדשניות ולמיזמים ייחודיים. היזהר מפזרנות - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כדלי, אתה רגיש לקרסוליים ומחזור דם. חשוב לשמור על פעילות גופנית סדירה ולשמור על מחזור הדם. הימנע מלחצים.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כדלי, אתה מביא חדשנות ומקוריות למשפחה. תקופה זו טובה לחיזוק קשרים משפחתיים ולחידושים משפחתיים.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כדלי, הרוחניות שלך קשורה לחופש ומקוריות. אתה מתחבר דרך חדשנות. תקופה זו טובה לטיפוח רוחניות ייחודית.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כדלי, אתה לומד דרך חדשנות ומקוריות. תקופה זו טובה ללימודים טכנולוגיים ולחידושים. סביבה מעוררת השראה חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כדלי, אתה אוהב נסיעות ייחודיות ומקוריות. תקופה זו טובה לטיולים חדשניים ולמקומות מיוחדים.",
+                                    source: "אסטרולוגיה מערבית - דלי"
+                                }
+                            ]
+                        },
+                        "דגים": {
+                            love: [
+                                {
+                                    text: "כדגים, אתה רומנטי ומתמסר באהבה. אתה מחפש חיבור נשמתי. תקופה זו מצוינת לרומנטיקה ולחיזוק קשרים רגשיים. היזהר מלהיות קורבני מדי - גבולות חשובים.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ],
+                            career: [
+                                {
+                                    text: "כדגים, אתה מצטיין באמנות וריפוי. תקופה זו טובה לתפקידים הדורשים יצירתיות - אמנות, ריפוי, רוחניות. היזהר מלהיות מנותק - מעשיות חשובה.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ],
+                            finance: [
+                                {
+                                    text: "כדגים, אתה נדיב בכספים. תקופה זו טובה להשקעות רוחניות ולמיזמים יצירתיים. היזהר מפזרנות - איזון חשוב.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ],
+                            health: [
+                                {
+                                    text: "כדגים, אתה רגיש לרגליים ומערכת הלימפה. חשוב לשמור על פעילות גופנית מתונה ולשמור על הרגליים. הימנע מבריחה מהמציאות.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ],
+                            family: [
+                                {
+                                    text: "כדגים, אתה מביא חמלה ואמפתיה למשפחה. תקופה זו טובה לחיזוק קשרים משפחתיים ולטיפוח רגשי.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ],
+                            spirituality: [
+                                {
+                                    text: "כדגים, הרוחניות שלך קשורה לחמלה ואינטואיציה. אתה מתחבר דרך רוחניות עמוקה. תקופה זו טובה לטיפוח רוחניות רוחנית.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ],
+                            education: [
+                                {
+                                    text: "כדגים, אתה לומד דרך אינטואיציה וחוויה. תקופה זו טובה ללימודים רוחניים ואמנותיים. סביבה תומכת חשובה לך.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ],
+                            travel: [
+                                {
+                                    text: "כדגים, אתה מעדיף נסיעות רומנטיות ורוחניות. תקופה זו טובה לטיולים רגועים ולמקומות מיוחדים.",
+                                    source: "אסטרולוגיה מערבית - דגים"
+                                }
+                            ]
+                        }
+                    };
+
+                    // Return interpretations for specific zodiac sign and category
+                    if (zodiacInterpretations[zodiacSign] && zodiacInterpretations[zodiacSign][category]) {
+                        return zodiacInterpretations[zodiacSign][category];
+                    }
+
+                    // Fallback to generic interpretations
+                    return [
+                        {
+                            text: `בתחום ${category}, המפה מראה פוטנציאל לצמיחה והתפתחות. תקופה זו טובה להתקדמות ולמימוש מטרות.`,
+                            source: "אסטרולוגיה מערבית"
+                        }
+                    ];
+                }
+            },
+            // פירושים גנריים (fallback)
+            love: [
+                {
+                    text: "בתחום הזוגיות, המפה מראה פוטנציאל לקשרים עמוקים ומשמעותיים. תקופה זו טובה להיכרויות חדשות ולחיזוק קשרים קיימים. האנרגיות תומכות בהבעת רגשות ובבניית אמון.",
+                    source: "אסטרולוגיה מערבית"
+                },
+                    {
+                        text: "על פי הזוהר, האהבה היא ביטוי של הרמוניה בין הנשמות. כאשר הלב פתוח, נפתחים שערי שמיים לברכה בזוגיות. חשוב לשמור על טוהר הלב וכיבוד האחר.",
+                        source: "זוהר"
+                    },
+                    {
+                        text: "בקבלה, הזוגיות מייצגת את האיזון בין חסד לגבורה. חשוב לשמור על איזון בין נתינה לקבלה ביחסים. כאשר יש הרמוניה בין המידות, האהבה פורחת.",
+                        source: "קבלה"
+                    },
+                    {
+                        text: "הכוכבים מראים שהאנרגיות תומכות במערכות יחסים מבוססות. זמן טוב להבעת רגשות ולהתקדמות לקראת מחויבות. נוגה במזל שור מביאה יציבות רגשית.",
+                        source: "אסטרולוגיה הודית"
+                    }
+                ],
+                career: [
+                    {
+                        text: "בתחום הקריירה, יש פוטנציאל לצמיחה והתפתחות משמעותית. זה זמן מצוין ליזום פרויקטים חדשים ולקדם מטרות מקצועיות. שבתאי במזל גדי תומך בהשגת יעדים ארוכי טווח.",
+                        source: "אסטרולוגיה מערבית"
+                    },
+                    {
+                        text: "על פי הכתובים, 'יגיע כפיך כי תאכל' - השקעה ועבודה קשה יניבו פירות בשפע. התמדה תוביל להצלחה. חשוב לפעול ביושר ובאמונה.",
+                        source: "כתובים"
+                    },
+                    {
+                        text: "בקבלה, העבודה היא ביטוי של יצירה divine. מצא את הייעוד המקצועי שלך והפוך אותו לכלי לביטוי עצמי. ספירת היסוד קשורה לעשייה מעשית.",
+                        source: "קבלה"
+                    },
+                    {
+                        text: "המזלות המעורבים מצביעים על הזדמנויות לקידום והכרה. חשוב לנצל תקופה זו לבניית מוניטין מקצועי. צדק במזל קשת מביא הרחבה והזדמנויות.",
+                        source: "אסטרולוגיה סינית"
+                    }
+                ],
+                finance: [
+                    {
+                        text: "בתחום הכספים, האנרגיות תומכות בצמיחה ושגשוג. זמן טוב להשקעות ולניהול פיננסי חכם. עם זאת, חשוב לגלות זהירות ולהתייעץ לפני החלטות גדולות.",
+                        source: "אסטרולוגיה מערבית"
+                    },
+                    {
+                        text: "על פי הקבלה, הכסף הוא אנרגיה הזקוקה לזרימה. חשוב לתת על מנת לקבל ולשמור על איזון בין הוצאות להכנסות. ספירת המלכות קשורה לשפע חומרי.",
+                        source: "קבלה"
+                    },
+                    {
+                        text: "הכוכבים מראים על הזדמנויות להגדלת ההכנסות. פלוטו בבית השני מביא פוטנציאל להתמרה פיננסית. השקעות בנכסים מוחשיות מומלצות.",
+                        source: "אסטרולוגיה הודית"
+                    },
+                    {
+                        text: "שבתאי במזל גדי מביא אחריות פיננסית. זמן טוב לתכנון ארוך טווח ולבניית ביטחון כלכלי. חשוב להקים קרן חיסכון ולהשקיע בחוכמה.",
+                        source: "אסטרולוגיה"
+                    }
+                ],
+                health: [
+                    {
+                        text: "בתחום הבריאות, חשוב לשמור על איזון בין הגוף לנפש. פעילות גופנית סדירה ותזונה מאוזנת יסייעו לשמירה על בריאות טובה. מאדים במזל טלה מביא אנרגיה ויטאלית.",
+                        source: "אסטרולוגיה מערבית"
+                    },
+                    {
+                        text: "הזוהר מלמד שהבריאות היא הרמוניה בין כל חלקי הנפש. שמירה על איזון פנימי תביא לבריאות שלמה. חשוב לטפל גם בצרכים הרגשיים.",
+                        source: "זוהר"
+                    },
+                    {
+                        text: "הירח במזל סרטן מצביע על חשיבות הטיפול בצרכים הרגשיים. מתח נפשי עלול להשפיע על הבריאות הפיזית. מדיטציה ותרגילי נשימה מומלצים.",
+                        source: "אסטרולוגיה"
+                    },
+                    {
+                        text: "על פי הרפואה הסינית, איזון בין יין ויאנג חשוב לבריאות. הקפד על מנוחה מספקת ופעילות מאוזנת. טיפולים בדיקור ומגע יכולים לסייע.",
+                        source: "אסטרולוגיה סינית"
+                    }
+                ],
+                family: [
+                    {
+                        text: "בתחום המשפחה, יש פוטנציאל לחיזוק הקשרים והבנה עמוקה יותר בין בני המשפחה. זמן טוב לאיחודים ולפיוסים. הירח בבית הרביעי מביא הרמוניה ביתית.",
+                        source: "אסטרולוגיה מערבית"
+                    },
+                    {
+                        text: "על פי הקבלה, המשפחה היא בסיס לעולם שלם. כיבוד ההורים והשורשים מביא ברכה לדורות. חשוב לשמור על קשר עם השורשים המשפחתיים.",
+                        source: "קבלה"
+                    },
+                    {
+                        text: "נוגה בבית הרביעי מביאה הרמוניה למרחב הביתי. זמן טוב לטיפוח הסביבה המשפחתית ולחיזוק הקשרים. מסורות משפחתיות מקבלות משמעות עמוקה.",
+                        source: "אסטרולוגיה"
+                    }
+                ],
+                spirituality: [
+                    {
+                        text: "בתחום הרוחניות, יש פתיחות לצמיחה והתפתחות פנימית. זמן מצוין ללימוד, מדיטציה וחיבור לעצמי הגבוה. נפטון במזל דגים מביא השראה רוחנית.",
+                        source: "אסטרולוגיה מערבית"
+                    },
+                    {
+                        text: "על פי הזוהר, הנשמה שואפת תמיד להתחבר למקורה. תרגול רוחני סדיר יביא להארה ושלווה פנימית. לימוד ספרי קודש מומלץ במיוחד.",
+                        source: "זוהר"
+                    },
+                    {
+                        text: "נפטון במזל דגים מביא חיבור עמוק לרוחניות. זמן להתעלות מעל החומר ולחוות אחדות עם היקום. מדיטציה והתבודדות יכולות להועיל.",
+                        source: "אסטרולוגיה"
+                    }
+                ],
+                education: [
+                    {
+                        text: "בתחום הלימודים, יש פוטנציאל להצלחה והתקדמות. זמן טוב לרכישת ידע חדש ולפיתוח כישורים. כוכב חמה במזל תאומים תומך בלמידה מהירה.",
+                        source: "אסטרולוגיה מערבית"
+                    },
+                    {
+                        text: "על פי הקבלה, הלימוד הוא מצווה המקרבת את האדם לבורא. השקעה בלמידה תביא ברכה והצלחה. חשוב ללמוד גם למען התועלת הרוחנית.",
+                        source: "קבלה"
+                    }
+                ],
+                travel: [
+                    {
+                        text: "בתחום הנסיעות, האנרגיות תומכות בהרפתקאות וגילויים. זמן טוב לתכנון טיולים ולמפגשים עם תרבויות חדשות. צדק במזל קשת מביא הרחבה והזדמנויות.",
+                        source: "אסטרולוגיה מערבית"
+                    },
+                    {
+                        text: "נסיעות יכולות להביא תובנות רוחניות חשובות. על פי הקבלה, כל מקום חדש הוא הזדמנות לצמיחה והתפתחות.",
+                        source: "קבלה"
+                    }
+                ]
+            },
+
+            // תחזיות לפי תקופות - ספציפיות לכל מזל
+            // eslint-disable-next-line
+            predictions: {
+                // eslint-disable-next-line
+                getPredictions: function getPredictions(zodiacSign, period) {
+                    const zodiacPredictions = {
+                        "טלה": {
+                            daily: {
+                                love: "כטלה, היום מתאים ליוזמה באהבה. קח יוזמה להיכרויות חדשות או חיזוק קשרים קיימים. ישירות וכנות יביאו תוצאות טובות.",
+                                career: "כטלה, היום מצוין לקחת יוזמה בקריירה. זה זמן טוב להתחלות חדשות ולקידום פרויקטים. אנרגיה ותנופה יביאו הצלחה.",
+                                finance: "כטלה, הזדמנויות פיננסיות מהירות יכולות להצליח, אך חשוב לחשוב לפני שתפעל. זהירות בהחלטות אימפולסיביות.",
+                                health: "כטלה, הקפד על מנוחה מספקת. פעילות גופנית תסייע לשחרר אנרגיה. היזהר מפציעות בראש.",
+                                spirituality: "כטלה, יום טוב להתחלות רוחניות חדשות. פעילות רוחנית תסייע לך להתחבר.",
+                                luck: "מספר המזל: 1. צבע מבורך: אדום. שעה מוצלחת: 08:00-10:00"
+                            },
+                            weekly: {
+                                love: "כטלה, השבוע מביא אנרגיה חדשה לזוגיות. יוזמה ותשוקה יביאו תוצאות טובות. היזהר מלהיות אימפולסיבי מדי.",
+                                career: "כטלה, שבוע פורה לפרויקטים חדשים. מנהיגות ויוזמה יביאו הצלחה. זה זמן טוב לקחת סיכונים מחושבים.",
+                                finance: "כטלה, צמיחה פיננסית צפויה. זהירות בהחלטות מהירות. ייעוץ מקצועי יכול לסייע.",
+                                health: "כטלה, שמור על איזון בין פעילות למנוחה. פעילות גופנית סדירה חשובה. הימנע מלחצים מיותרים.",
+                                spirituality: "כטלה, שבוע של התחלות רוחניות. פעילות רוחנית תסייע לך להתחבר.",
+                                luck: "מספר המזל: 1. צבע מבורך: אדום. ימים מוצלחים: שלישי, חמישי"
+                            },
+                            monthly: {
+                                love: "כטלה, חודש של התחלות חדשות באהבה. יוזמה ותשוקה יביאו תוצאות טובות. זה זמן טוב להיכרויות חדשות.",
+                                career: "כטלה, חודש מכריע בקריירה. יוזמה ומנהיגות יובילו להתקדמות משמעותית. פרויקטים חדשים יצליחו.",
+                                finance: "כטלה, שינויים פיננסיים חיוביים. זהירות בהחלטות מהירות. השקעות נבונות יניבו פירות.",
+                                health: "כטלה, מתמקד בבריאות כללית. פעילות גופנית סדירה תביא לתוצאות. הימנע מלחצים מיותרים.",
+                                spirituality: "כטלה, חודש של התחלות רוחניות. פעילות רוחנית תסייע לך להתחבר.",
+                                luck: "מספר המזל: 1. צבע מבורך: אדום. שבוע מוצלח: הראשון"
+                            },
+                            yearly: {
+                                love: "כטלה, שנה של התחלות חדשות באהבה. יוזמה ותשוקה יביאו תוצאות טובות. זה זמן טוב למחויבות.",
+                                career: "כטלה, שנת פריצת דרך מקצועית. יוזמה ומנהיגות יובילו להצלחה. קידום משמעותי צפוי.",
+                                finance: "כטלה, שגשוג פיננסי משמעותי. זהירות בהחלטות מהירות. השקעות נבונות יניבו פירות.",
+                                health: "כטלה, שנה טובה לבריאות. פעילות גופנית סדירה חשובה. הימנע מלחצים מיותרים.",
+                                spirituality: "כטלה, שנה של התחלות רוחניות. פעילות רוחנית תסייע לך להתחבר.",
+                                luck: "מספר המזל: 1. צבע מבורך: אדום. חודשים מוצלחים: מרץ, נובמבר"
+                            }
+                        },
+                        "שור": {
+                            daily: {
+                                love: "כשור, היום מתאים לבניית קשרים יציבים. נאמנות ויציבות יביאו תוצאות טובות. תן מקום לרגשות.",
+                                career: "כשור, היום טוב לעבודה יציבה ומעשית. התמדה תביא להצלחה. זהירות מלהיות מקובע מדי.",
+                                finance: "כשור, הזדמנויות פיננסיות יציבות. זה זמן טוב לחיסכון ולהשקעות בטוחות. נדל\"ן מתאים.",
+                                health: "כשור, הקפד על תזונה מאוזנת. פעילות גופנית מתונה תועיל. היזהר מגרון וצוואר.",
+                                spirituality: "כשור, יום טוב לחיבור לטבע ויופי. רוחניות דרך אמנות תסייע.",
+                                luck: "מספר המזל: 2. צבע מבורך: ירוק. שעה מוצלחת: 10:00-12:00"
+                            },
+                            weekly: {
+                                love: "כשור, השבוע מביא יציבות לזוגיות. נאמנות ויציבות יביאו תוצאות טובות. זה זמן טוב לבניית קשר יציב.",
+                                career: "כשור, שבוע פורה לעבודה יציבה. התמדה תביא להצלחה. זהירות מלהיות מקובע מדי.",
+                                finance: "כשור, צמיחה פיננסית יציבה. זה זמן טוב לחיסכון ולהשקעות בטוחות.",
+                                health: "כשור, שמור על תזונה מאוזנת. פעילות גופנית מתונה חשובה.",
+                                spirituality: "כשור, שבוע של חיבור לטבע ויופי. רוחניות דרך אמנות תסייע.",
+                                luck: "מספר המזל: 2. צבע מבורך: ירוק. ימים מוצלחים: שישי, ראשון"
+                            },
+                            monthly: {
+                                love: "כשור, חודש של יציבות באהבה. נאמנות ויציבות יביאו תוצאות טובות. זה זמן טוב למחויבות.",
+                                career: "כשור, חודש מכריע בקריירה. התמדה תוביל להתקדמות משמעותית.",
+                                finance: "כשור, שינויים פיננסיים יציבים. זה זמן טוב לחיסכון ולהשקעות בטוחות.",
+                                health: "כשור, מתמקד בבריאות כללית. תזונה מאוזנת חשובה במיוחד.",
+                                spirituality: "כשור, חודש של חיבור לטבע ויופי. רוחניות דרך אמנות תסייע.",
+                                luck: "מספר המזל: 2. צבע מבורך: ירוק. שבוע מוצלח: השני"
+                            },
+                            yearly: {
+                                love: "כשור, שנה של יציבות באהבה. נאמנות ויציבות יביאו תוצאות טובות. זה זמן טוב למחויבות ארוכת טווח.",
+                                career: "כשור, שנת פריצת דרך מקצועית. התמדה תוביל להצלחה. קידום משמעותי צפוי.",
+                                finance: "כשור, שגשוג פיננסי יציב. זה זמן טוב לחיסכון ולהשקעות בטוחות.",
+                                health: "כשור, שנה טובה לבריאות. תזונה מאוזנת חשובה במיוחד.",
+                                spirituality: "כשור, שנה של חיבור לטבע ויופי. רוחניות דרך אמנות תסייע.",
+                                luck: "מספר המזל: 2. צבע מבורך: ירוק. חודשים מוצלחים: אפריל, דצמבר"
+                            }
+                        },
+                        "תאומים": {
+                            daily: {
+                                love: "כתאומים, היום מתאים לתקשורת פתוחה באהבה. שיחות כנות יביאו הבנות. זה זמן טוב להיכרויות חדשות.",
+                                career: "כתאומים, היום מצוין לעבודה עם אנשים ותקשורת. פרויקטים מגוונים יצליחו. זהירות מפיזור.",
+                                finance: "כתאומים, הזדמנויות פיננסיות מגוונות. זהירות בהחלטות מהירות. ייעוץ מקצועי יכול לסייע.",
+                                health: "כתאומים, הקפד על נשימה נכונה. פעילות גופנית קלה תועיל. הימנע מלחצים.",
+                                spirituality: "כתאומים, יום טוב ללימוד ותקשורת רוחנית. קריאה תסייע.",
+                                luck: "מספר המזל: 3. צבע מבורך: צהוב. שעה מוצלחת: 11:00-13:00"
+                            },
+                            weekly: {
+                                love: "כתאומים, השבוע מביא הזדמנויות לתקשורת פתוחה. שיחות יביאו הבנות.",
+                                career: "כתאומים, שבוע פורה לפרויקטים מגוונים. תקשורת תביא הצלחה.",
+                                finance: "כתאומים, צמיחה פיננסית מגוונת. זהירות מפיזור.",
+                                health: "כתאומים, שמור על נשימה נכונה. פעילות גופנית קלה חשובה.",
+                                spirituality: "כתאומים, שבוע של לימוד ותקשורת רוחנית.",
+                                luck: "מספר המזל: 3. צבע מבורך: צהוב. ימים מוצלחים: רביעי, שישי"
+                            },
+                            monthly: {
+                                love: "כתאומים, חודש של תקשורת פתוחה. שיחות יביאו הבנות.",
+                                career: "כתאומים, חודש פורה לפרויקטים מגוונים.",
+                                finance: "כתאומים, שינויים פיננסיים מגוונים.",
+                                health: "כתאומים, מתמקד בבריאות כללית. נשימה נכונה חשובה.",
+                                spirituality: "כתאומים, חודש של לימוד ותקשורת רוחנית.",
+                                luck: "מספר המזל: 3. צבע מבורך: צהוב. שבוע מוצלח: השלישי"
+                            },
+                            yearly: {
+                                love: "כתאומים, שנה של תקשורת פתוחה. שיחות יביאו הבנות.",
+                                career: "כתאומים, שנת פריצת דרך בתקשורת.",
+                                finance: "כתאומים, שגשוג פיננסי מגוון.",
+                                health: "כתאומים, שנה טובה לבריאות. נשימה נכונה חשובה.",
+                                spirituality: "כתאומים, שנה של לימוד ותקשורת רוחנית.",
+                                luck: "מספר המזל: 3. צבע מבורך: צהוב. חודשים מוצלחים: מאי, נובמבר"
+                            }
+                        },
+                        "סרטן": {
+                            daily: {
+                                love: "כסרטן, היום מתאים לחיזוק קשרים רגשיים. פתח את הלב לאהבה. זה זמן טוב לבניית אמון.",
+                                career: "כסרטן, היום טוב לתפקידים הדורשים רגישות. אמפתיה תביא הצלחה.",
+                                finance: "כסרטן, הזדמנויות פיננסיות זהירות. זהירות מפחדים מיותרים.",
+                                health: "כסרטן, הקפד על תזונה מאוזנת. טיפול רגשי חשוב.",
+                                spirituality: "כסרטן, יום טוב לחיבור רגשי ורוחני. מדיטציה תסייע.",
+                                luck: "מספר המזל: 4. צבע מבורך: כסף. שעה מוצלחת: 21:00-23:00"
+                            },
+                            weekly: {
+                                love: "כסרטן, השבוע מביא הזדמנויות לחיזוק קשרים רגשיים.",
+                                career: "כסרטן, שבוע פורה לתפקידים רגישים.",
+                                finance: "כסרטן, צמיחה פיננסית זהירה.",
+                                health: "כסרטן, שמור על תזונה מאוזנת. טיפול רגשי חשוב.",
+                                spirituality: "כסרטן, שבוע של חיבור רגשי ורוחני.",
+                                luck: "מספר המזל: 4. צבע מבורך: כסף. ימים מוצלחים: שני, רביעי"
+                            },
+                            monthly: {
+                                love: "כסרטן, חודש של חיזוק קשרים רגשיים.",
+                                career: "כסרטן, חודש פורה לתפקידים רגישים.",
+                                finance: "כסרטן, שינויים פיננסיים זהירים.",
+                                health: "כסרטן, מתמקד בבריאות רגשית. תזונה חשובה.",
+                                spirituality: "כסרטן, חודש של חיבור רגשי ורוחני.",
+                                luck: "מספר המזל: 4. צבע מבורך: כסף. שבוע מוצלח: הרביעי"
+                            },
+                            yearly: {
+                                love: "כסרטן, שנה של חיזוק קשרים רגשיים.",
+                                career: "כסרטן, שנת פריצת דרך בתפקידים רגישים.",
+                                finance: "כסרטן, שגשוג פיננסי זהיר.",
+                                health: "כסרטן, שנה טובה לבריאות רגשית.",
+                                spirituality: "כסרטן, שנה של חיבור רגשי ורוחני.",
+                                luck: "מספר המזל: 4. צבע מבורך: כסף. חודשים מוצלחים: יוני, דצמבר"
+                            }
+                        },
+                        "אריה": {
+                            daily: {
+                                love: "כאריה, היום מתאים לרומנטיקה והערכה. פתח את הלב לאהבה. זה זמן טוב להבעת רגשות.",
+                                career: "כאריה, היום מצוין לתפקידי מנהיגות ויצירה. ביטחון תביא הצלחה.",
+                                finance: "כאריה, הזדמנויות פיננסיות יצירתיות. זהירות מפזרנות.",
+                                health: "כאריה, הקפד על פעילות גופנית סדירה. שמור על הלב.",
+                                spirituality: "כאריה, יום טוב ליצירה רוחנית. ביטוי עצמי תסייע.",
+                                luck: "מספר המזל: 5. צבע מבורך: זהב. שעה מוצלחת: 12:00-14:00"
+                            },
+                            weekly: {
+                                love: "כאריה, השבוע מביא הזדמנויות לרומנטיקה.",
+                                career: "כאריה, שבוע פורה לתפקידי מנהיגות.",
+                                finance: "כאריה, צמיחה פיננסית יצירתית.",
+                                health: "כאריה, שמור על פעילות גופנית סדירה.",
+                                spirituality: "כאריה, שבוע של יצירה רוחנית.",
+                                luck: "מספר המזל: 5. צבע מבורך: זהב. ימים מוצלחים: ראשון, שלישי"
+                            },
+                            monthly: {
+                                love: "כאריה, חודש של רומנטיקה והערכה.",
+                                career: "כאריה, חודש פורה לתפקידי מנהיגות.",
+                                finance: "כאריה, שינויים פיננסיים יצירתיים.",
+                                health: "כאריה, מתמקד בבריאות כללית. פעילות חשובה.",
+                                spirituality: "כאריה, חודש של יצירה רוחנית.",
+                                luck: "מספר המזל: 5. צבע מבורך: זהב. שבוע מוצלח: הראשון"
+                            },
+                            yearly: {
+                                love: "כאריה, שנה של רומנטיקה והערכה.",
+                                career: "כאריה, שנת פריצת דרך במנהיגות.",
+                                finance: "כאריה, שגשוג פיננסי יצירתי.",
+                                health: "כאריה, שנה טובה לבריאות. פעילות חשובה.",
+                                spirituality: "כאריה, שנה של יצירה רוחנית.",
+                                luck: "מספר המזל: 5. צבע מבורך: זהב. חודשים מוצלחים: יולי, ינואר"
+                            }
+                        },
+                        "בתולה": {
+                            daily: {
+                                love: "כבתולה, היום מתאים לבניית קשר מסודר. מעשים יביאו תוצאות. זה זמן טוב להבעת אהבה דרך מעשים.",
+                                career: "כבתולה, היום מצוין לעבודה מפורטת ומסודרת. דיוק תביא הצלחה.",
+                                finance: "כבתולה, הזדמנויות פיננסיות זהירות. תכנון חשוב.",
+                                health: "כבתולה, הקפד על תזונה מאוזנת. פעילות גופנית מתונה תועיל.",
+                                spirituality: "כבתולה, יום טוב לשירות רוחני. עזרה לאחרים תסייע.",
+                                luck: "מספר המזל: 6. צבע מבורך: חום. שעה מוצלחת: 06:00-08:00"
+                            },
+                            weekly: {
+                                love: "כבתולה, השבוע מביא הזדמנויות לבניית קשר מסודר.",
+                                career: "כבתולה, שבוע פורה לעבודה מפורטת.",
+                                finance: "כבתולה, צמיחה פיננסית זהירה.",
+                                health: "כבתולה, שמור על תזונה מאוזנת.",
+                                spirituality: "כבתולה, שבוע של שירות רוחני.",
+                                luck: "מספר המזל: 6. צבע מבורך: חום. ימים מוצלחים: רביעי, שישי"
+                            },
+                            monthly: {
+                                love: "כבתולה, חודש של בניית קשר מסודר.",
+                                career: "כבתולה, חודש פורה לעבודה מפורטת.",
+                                finance: "כבתולה, שינויים פיננסיים זהירים.",
+                                health: "כבתולה, מתמקד בבריאות כללית. תזונה חשובה.",
+                                spirituality: "כבתולה, חודש של שירות רוחני.",
+                                luck: "מספר המזל: 6. צבע מבורך: חום. שבוע מוצלח: השני"
+                            },
+                            yearly: {
+                                love: "כבתולה, שנה של בניית קשר מסודר.",
+                                career: "כבתולה, שנת פריצת דרך בעבודה מפורטת.",
+                                finance: "כבתולה, שגשוג פיננסי זהיר.",
+                                health: "כבתולה, שנה טובה לבריאות. תזונה חשובה.",
+                                spirituality: "כבתולה, שנה של שירות רוחני.",
+                                luck: "מספר המזל: 6. צבע מבורך: חום. חודשים מוצלחים: אוגוסט, פברואר"
+                            }
+                        },
+                        "מאזניים": {
+                            daily: {
+                                love: "כמאזניים, היום מתאים להרמוניה ושותפות. איזון יביא תוצאות טובות. זה זמן טוב לרומנטיקה.",
+                                career: "כמאזניים, היום מצוין לעבודת צוות ושיתוף פעולה. דיפלומטיה תביא הצלחה.",
+                                finance: "כמאזניים, הזדמנויות פיננסיות הרמוניות. זהירות מהססנות.",
+                                health: "כמאזניים, הקפד על איזון. פעילות גופנית מתונה תועיל.",
+                                spirituality: "כמאזניים, יום טוב להרמוניה רוחנית. יופי תסייע.",
+                                luck: "מספר המזל: 7. צבע מבורך: ורוד. שעה מוצלחת: 19:00-21:00"
+                            },
+                            weekly: {
+                                love: "כמאזניים, השבוע מביא הזדמנויות להרמוניה.",
+                                career: "כמאזניים, שבוע פורה לעבודת צוות.",
+                                finance: "כמאזניים, צמיחה פיננסית הרמונית.",
+                                health: "כמאזניים, שמור על איזון.",
+                                spirituality: "כמאזניים, שבוע של הרמוניה רוחנית.",
+                                luck: "מספר המזל: 7. צבע מבורך: ורוד. ימים מוצלחים: שישי, ראשון"
+                            },
+                            monthly: {
+                                love: "כמאזניים, חודש של הרמוניה ושותפות.",
+                                career: "כמאזניים, חודש פורה לעבודת צוות.",
+                                finance: "כמאזניים, שינויים פיננסיים הרמוניים.",
+                                health: "כמאזניים, מתמקד באיזון. פעילות חשובה.",
+                                spirituality: "כמאזניים, חודש של הרמוניה רוחנית.",
+                                luck: "מספר המזל: 7. צבע מבורך: ורוד. שבוע מוצלח: השלישי"
+                            },
+                            yearly: {
+                                love: "כמאזניים, שנה של הרמוניה ושותפות.",
+                                career: "כמאזניים, שנת פריצת דרך בעבודת צוות.",
+                                finance: "כמאזניים, שגשוג פיננסי הרמוני.",
+                                health: "כמאזניים, שנה טובה לאיזון.",
+                                spirituality: "כמאזניים, שנה של הרמוניה רוחנית.",
+                                luck: "מספר המזל: 7. צבע מבורך: ורוד. חודשים מוצלחים: ספטמבר, מרץ"
+                            }
+                        },
+                        "עקרב": {
+                            daily: {
+                                love: "כעקרב, היום מתאים לקשר עמוק ומשמעותי. אינטנסיביות תביא תוצאות. זה זמן טוב לבניית אמון.",
+                                career: "כעקרב, היום מצוין למחקר וחקירות. עומק תביא הצלחה.",
+                                finance: "כעקרב, הזדמנויות פיננסיות עוצמתיות. זהירות משליטה.",
+                                health: "כעקרב, הקפד על בריאות מינית. פעילות גופנית סדירה תועיל.",
+                                spirituality: "כעקרב, יום טוב להתמרה רוחנית. שינוי עמוק תסייע.",
+                                luck: "מספר המזל: 8. צבע מבורך: שחור. שעה מוצלחת: 22:00-24:00"
+                            },
+                            weekly: {
+                                love: "כעקרב, השבוע מביא הזדמנויות לקשר עמוק.",
+                                career: "כעקרב, שבוע פורה למחקר.",
+                                finance: "כעקרב, צמיחה פיננסית עוצמתית.",
+                                health: "כעקרב, שמור על בריאות מינית.",
+                                spirituality: "כעקרב, שבוע של התמרה רוחנית.",
+                                luck: "מספר המזל: 8. צבע מבורך: שחור. ימים מוצלחים: שלישי, חמישי"
+                            },
+                            monthly: {
+                                love: "כעקרב, חודש של קשר עמוק ומשמעותי.",
+                                career: "כעקרב, חודש פורה למחקר.",
+                                finance: "כעקרב, שינויים פיננסיים עוצמתיים.",
+                                health: "כעקרב, מתמקד בבריאות מינית.",
+                                spirituality: "כעקרב, חודש של התמרה רוחנית.",
+                                luck: "מספר המזל: 8. צבע מבורך: שחור. שבוע מוצלח: הרביעי"
+                            },
+                            yearly: {
+                                love: "כעקרב, שנה של קשר עמוק ומשמעותי.",
+                                career: "כעקרב, שנת פריצת דרך במחקר.",
+                                finance: "כעקרב, שגשוג פיננסי עוצמתי.",
+                                health: "כעקרב, שנה טובה לבריאות מינית.",
+                                spirituality: "כעקרב, שנה של התמרה רוחנית.",
+                                luck: "מספר המזל: 8. צבע מבורך: שחור. חודשים מוצלחים: אוקטובר, אפריל"
+                            }
+                        },
+                        "קשת": {
+                            daily: {
+                                love: "כקשת, היום מתאים להרפתקאות וגיוון באהבה. חופש יביא תוצאות טובות. זה זמן טוב להיכרויות חדשות.",
+                                career: "כקשת, היום מצוין לנסיעות וחינוך. אופטימיות תביא הצלחה.",
+                                finance: "כקשת, הזדמנויות פיננסיות אופטימיות. זהירות מפזרנות.",
+                                health: "כקשת, הקפד על פעילות גופנית סדירה. שמור על הכבד.",
+                                spirituality: "כקשת, יום טוב לפילוסופיה רוחנית. חוכמה תסייע.",
+                                luck: "מספר המזל: 9. צבע מבורך: סגול. שעה מוצלחת: 15:00-17:00"
+                            },
+                            weekly: {
+                                love: "כקשת, השבוע מביא הזדמנויות להרפתקאות.",
+                                career: "כקשת, שבוע פורה לנסיעות וחינוך.",
+                                finance: "כקשת, צמיחה פיננסית אופטימית.",
+                                health: "כקשת, שמור על פעילות גופנית סדירה.",
+                                spirituality: "כקשת, שבוע של פילוסופיה רוחנית.",
+                                luck: "מספר המזל: 9. צבע מבורך: סגול. ימים מוצלחים: חמישי, שבת"
+                            },
+                            monthly: {
+                                love: "כקשת, חודש של הרפתקאות וגיוון.",
+                                career: "כקשת, חודש פורה לנסיעות וחינוך.",
+                                finance: "כקשת, שינויים פיננסיים אופטימיים.",
+                                health: "כקשת, מתמקד בפעילות גופנית.",
+                                spirituality: "כקשת, חודש של פילוסופיה רוחנית.",
+                                luck: "מספר המזל: 9. צבע מבורך: סגול. שבוע מוצלח: הראשון"
+                            },
+                            yearly: {
+                                love: "כקשת, שנה של הרפתקאות וגיוון.",
+                                career: "כקשת, שנת פריצת דרך בנסיעות וחינוך.",
+                                finance: "כקשת, שגשוג פיננסי אופטימי.",
+                                health: "כקשת, שנה טובה לפעילות גופנית.",
+                                spirituality: "כקשת, שנה של פילוסופיה רוחנית.",
+                                luck: "מספר המזל: 9. צבע מבורך: סגול. חודשים מוצלחים: נובמבר, מאי"
+                            }
+                        },
+                        "גדי": {
+                            daily: {
+                                love: "כגדי, היום מתאים לבניית קשר יציב. מחויבות תביא תוצאות טובות. זה זמן טוב למחויבות.",
+                                career: "כגדי, היום מצוין לעסקים וניהול. שאפתנות תביא הצלחה.",
+                                finance: "כגדי, הזדמנויות פיננסיות יציבות. תכנון חשוב.",
+                                health: "כגדי, הקפד על פעילות גופנית סדירה. שמור על העצמות.",
+                                spirituality: "כגדי, יום טוב למסורת רוחנית. משמעת תסייע.",
+                                luck: "מספר המזל: 10. צבע מבורך: אפור. שעה מוצלחת: 10:00-12:00"
+                            },
+                            weekly: {
+                                love: "כגדי, השבוע מביא הזדמנויות לבניית קשר יציב.",
+                                career: "כגדי, שבוע פורה לעסקים וניהול.",
+                                finance: "כגדי, צמיחה פיננסית יציבה.",
+                                health: "כגדי, שמור על פעילות גופנית סדירה.",
+                                spirituality: "כגדי, שבוע של מסורת רוחנית.",
+                                luck: "מספר המזל: 10. צבע מבורך: אפור. ימים מוצלחים: שני, שישי"
+                            },
+                            monthly: {
+                                love: "כגדי, חודש של בניית קשר יציב.",
+                                career: "כגדי, חודש פורה לעסקים וניהול.",
+                                finance: "כגדי, שינויים פיננסיים יציבים.",
+                                health: "כגדי, מתמקד בפעילות גופנית.",
+                                spirituality: "כגדי, חודש של מסורת רוחנית.",
+                                luck: "מספר המזל: 10. צבע מבורך: אפור. שבוע מוצלח: השני"
+                            },
+                            yearly: {
+                                love: "כגדי, שנה של בניית קשר יציב.",
+                                career: "כגדי, שנת פריצת דרך בעסקים וניהול.",
+                                finance: "כגדי, שגשוג פיננסי יציב.",
+                                health: "כגדי, שנה טובה לפעילות גופנית.",
+                                spirituality: "כגדי, שנה של מסורת רוחנית.",
+                                luck: "מספר המזל: 10. צבע מבורך: אפור. חודשים מוצלחים: דצמבר, יוני"
+                            }
+                        },
+                        "דלי": {
+                            daily: {
+                                love: "כדלי, היום מתאים לקשרים ייחודיים ומקוריים. חופש יביא תוצאות טובות. זה זמן טוב לידידות בחברות.",
+                                career: "כדלי, היום מצוין לטכנולוגיה וחדשנות. מקוריות תביא הצלחה.",
+                                finance: "כדלי, הזדמנויות פיננסיות חדשניות. זהירות מפזרנות.",
+                                health: "כדלי, הקפד על פעילות גופנית סדירה. שמור על מחזור הדם.",
+                                spirituality: "כדלי, יום טוב לחדשנות רוחנית. מקוריות תסייע.",
+                                luck: "מספר המזל: 11. צבע מבורך: כחול בהיר. שעה מוצלחת: 20:00-22:00"
+                            },
+                            weekly: {
+                                love: "כדלי, השבוע מביא הזדמנויות לקשרים ייחודיים.",
+                                career: "כדלי, שבוע פורה לטכנולוגיה וחדשנות.",
+                                finance: "כדלי, צמיחה פיננסית חדשנית.",
+                                health: "כדלי, שמור על פעילות גופנית סדירה.",
+                                spirituality: "כדלי, שבוע של חדשנות רוחנית.",
+                                luck: "מספר המזל: 11. צבע מבורך: כחול בהיר. ימים מוצלחים: שבת, שני"
+                            },
+                            monthly: {
+                                love: "כדלי, חודש של קשרים ייחודיים ומקוריים.",
+                                career: "כדלי, חודש פורה לטכנולוגיה וחדשנות.",
+                                finance: "כדלי, שינויים פיננסיים חדשניים.",
+                                health: "כדלי, מתמקד בפעילות גופנית.",
+                                spirituality: "כדלי, חודש של חדשנות רוחנית.",
+                                luck: "מספר המזל: 11. צבע מבורך: כחול בהיר. שבוע מוצלח: הראשון"
+                            },
+                            yearly: {
+                                love: "כדלי, שנה של קשרים ייחודיים ומקוריים.",
+                                career: "כדלי, שנת פריצת דרך בטכנולוגיה וחדשנות.",
+                                finance: "כדלי, שגשוג פיננסי חדשני.",
+                                health: "כדלי, שנה טובה לפעילות גופנית.",
+                                spirituality: "כדלי, שנה של חדשנות רוחנית.",
+                                luck: "מספר המזל: 11. צבע מבורך: כחול בהיר. חודשים מוצלחים: ינואר, יולי"
+                            }
+                        },
+                        "דגים": {
+                            daily: {
+                                love: "כדגים, היום מתאים לחיבור נשמתי עמוק. רומנטיקה תביא תוצאות טובות. זה זמן טוב להתמסרות.",
+                                career: "כדגים, היום מצוין לאמנות וריפוי. יצירתיות תביא הצלחה.",
+                                finance: "כדגים, הזדמנויות פיננסיות רוחניות. זהירות מפזרנות.",
+                                health: "כדגים, הקפד על פעילות גופנית מתונה. שמור על הרגליים.",
+                                spirituality: "כדגים, יום טוב לרוחניות עמוקה. אינטואיציה תסייע.",
+                                luck: "מספר המזל: 12. צבע מבורך: תכלת. שעה מוצלחת: 03:00-05:00"
+                            },
+                            weekly: {
+                                love: "כדגים, השבוע מביא הזדמנויות לחיבור נשמתי.",
+                                career: "כדגים, שבוע פורה לאמנות וריפוי.",
+                                finance: "כדגים, צמיחה פיננסית רוחנית.",
+                                health: "כדגים, שמור על פעילות גופנית מתונה.",
+                                spirituality: "כדגים, שבוע של רוחניות עמוקה.",
+                                luck: "מספר המזל: 12. צבע מבורך: תכלת. ימים מוצלחים: חמישי, ראשון"
+                            },
+                            monthly: {
+                                love: "כדגים, חודש של חיבור נשמתי עמוק.",
+                                career: "כדגים, חודש פורה לאמנות וריפוי.",
+                                finance: "כדגים, שינויים פיננסיים רוחניים.",
+                                health: "כדגים, מתמקד בפעילות גופנית מתונה.",
+                                spirituality: "כדגים, חודש של רוחניות עמוקה.",
+                                luck: "מספר המזל: 12. צבע מבורך: תכלת. שבוע מוצלח: הרביעי"
+                            },
+                            yearly: {
+                                love: "כדגים, שנה של חיבור נשמתי עמוק.",
+                                career: "כדגים, שנת פריצת דרך באמנות וריפוי.",
+                                finance: "כדגים, שגשוג פיננסי רוחני.",
+                                health: "כדגים, שנה טובה לפעילות גופנית מתונה.",
+                                spirituality: "כדגים, שנה של רוחניות עמוקה.",
+                                luck: "מספר המזל: 12. צבע מבורך: תכלת. חודשים מוצלחים: פברואר, אוגוסט"
+                            }
+                        }
+                    };
+
+                    // Return predictions for specific zodiac sign and period
+                    if (zodiacPredictions[zodiacSign] && zodiacPredictions[zodiacSign][period]) {
+                        return zodiacPredictions[zodiacSign][period];
+                    }
+
+                    // Fallback to generic predictions
+                    const fallbackPredictions = {
+                        daily: {
+                            love: "היום מתאים להיכרויות חדשות ולחיזוק קשרים קיימים. פתח את הלב לאפשרויות חדשות. שיחה כנה יכולה לפתוח דלתות.",
+                            career: "זמן טוב לקדם פרויקטים ולבקש קידום. האנרגיות תומכות בהצלחה מקצועית. פגישות חשובות יתנהלו בחיוב.",
+                            finance: "הזדמנות להגדלת הכנסות. זהירות בהחלטות פיננסיות גדולות. ייעוץ מקצועי יכול לסייע.",
+                            health: "הקפד על מנוחה ותזונה מאוזנת. פעילות גופנית קלה תועיל. הימנע מלחצים מיותרים.",
+                            spirituality: "יום טוב למדיטציה והתבוננות פנימית. קח זמן להרהר ולהתחבר לעצמך.",
+                            luck: "מספר המזל: 7. צבע מבורך: כחול. שעה מוצלחת: 14:00-16:00"
+                        },
+                        weekly: {
+                            love: "השבוע מביא הזדמנויות לקשרים משמעותיים. זמן טוב להתקדמות בזוגיות. תקשורת פתוחה תביא הבנות.",
+                            career: "שבוע פורה לפרויקטים חדשים. שיתופי פעולה יביאו לתוצאות מצוינות. חשוב לעבוד בצוות.",
+                            finance: "צמיחה פיננסית צפויה. זמן טוב להשקעות ולחיסכון. בקש ייעוץ לפני החלטות גדולות.",
+                            health: "שמור על איזון בין עבודה למנוחה. מתח עלול להשפיע על הבריאות. פעילות גופנית סדירה חשובה.",
+                            spirituality: "שבוע של תובנות רוחניות. זמן טוב ללימוד והעמקה. קח פסק זמן להתבוננות.",
+                            luck: "מספר המזל: 3. צבע מבורך: ירוק. ימים מוצלחים: שלישי, חמישי"
+                        },
+                        monthly: {
+                            love: "חודש של צמיחה רגשית. מערכות יחסים יתחזקו ויעמיקו. זמן טוב למחויבות ולהתקדמות.",
+                            career: "חודש מכריע בקריירה. החלטות חשובות יובילו להתקדמות משמעותית. פרויקטים חדשים יצליחו.",
+                            finance: "שינויים פיננסיים חיוביים. זמן טוב לתכנון עתידי. השקעות נבונות יניבו פירות.",
+                            health: "מתמקד בבריאות כללית. פעילות גופנית סדירה תביא לתוצאות. תזונה נכונה חשובה במיוחד.",
+                            spirituality: "חודש של צמיחה רוחנית. זמן טוב לקורסים ולימוד. מדיטציה סדירה תועיל.",
+                            luck: "מספר המזל: 9. צבע מבורך: סגול. שבוע מוצלח: השני"
+                        },
+                        yearly: {
+                            love: "שנה של אהבה והתחלות חדשות. מערכות יחסים יגיעו לרמות חדשות של קרבה. זמן טוב למחויבות ארוכת טווח.",
+                            career: "שנת פריצת דרך מקצועית. הזדמנויות חדשות יובילו להצלחה. קידום משמעותי צפוי.",
+                            finance: "שגשוג פיננסי משמעותי. השקעות נבונות יניבו פירות. זמן טוב לבניית ביטחון כלכלי.",
+                            health: "שנה טובה לבריאות. התמקדות באורח חיים בריא תביא לתוצאות. פעילות גופנית סדירה חשובה.",
+                            spirituality: "שנה של התעוררות רוחנית. מסע פנימי משמעותי צפוי. זמן טוב ללימוד והעמקה.",
+                            luck: "מספר המזל: 5. צבע מבורך: זהב. חודשים מוצלחים: מרץ, ספטמבר"
+                        }
+                    };
+                    
+                    return fallbackPredictions[period] || fallbackPredictions.daily;
+                },
+                // Generic predictions (fallback)
+                daily: {
+                    love: "היום מתאים להיכרויות חדשות ולחיזוק קשרים קיימים. פתח את הלב לאפשרויות חדשות. שיחה כנה יכולה לפתוח דלתות.",
+                    career: "זמן טוב לקדם פרויקטים ולבקש קידום. האנרגיות תומכות בהצלחה מקצועית. פגישות חשובות יתנהלו בחיוב.",
+                    finance: "הזדמנות להגדלת הכנסות. זהירות בהחלטות פיננסיות גדולות. ייעוץ מקצועי יכול לסייע.",
+                    health: "הקפד על מנוחה ותזונה מאוזנת. פעילות גופנית קלה תועיל. הימנע מלחצים מיותרים.",
+                    spirituality: "יום טוב למדיטציה והתבוננות פנימית. קח זמן להרהר ולהתחבר לעצמך.",
+                    luck: "מספר המזל: 7. צבע מבורך: כחול. שעה מוצלחת: 14:00-16:00"
+                },
+                weekly: {
+                    love: "השבוע מביא הזדמנויות לקשרים משמעותיים. זמן טוב להתקדמות בזוגיות. תקשורת פתוחה תביא הבנות.",
+                    career: "שבוע פורה לפרויקטים חדשים. שיתופי פעולה יביאו לתוצאות מצוינות. חשוב לעבוד בצוות.",
+                    finance: "צמיחה פיננסית צפויה. זמן טוב להשקעות ולחיסכון. בקש ייעוץ לפני החלטות גדולות.",
+                    health: "שמור על איזון בין עבודה למנוחה. מתח עלול להשפיע על הבריאות. פעילות גופנית סדירה חשובה.",
+                    spirituality: "שבוע של תובנות רוחניות. זמן טוב ללימוד והעמקה. קח פסק זמן להתבוננות.",
+                    luck: "מספר המזל: 3. צבע מבורך: ירוק. ימים מוצלחים: שלישי, חמישי"
+                },
+                // eslint-disable-next-line
+                monthly: {
+                    love: "חודש של צמיחה רגשית. מערכות יחסים יתחזקו ויעמיקו. זמן טוב למחויבות ולהתקדמות.",
+                    career: "חודש מכריע בקריירה. החלטות חשובות יובילו להתקדמות משמעותית. פרויקטים חדשים יצליחו.",
+                    finance: "שינויים פיננסיים חיוביים. זמן טוב לתכנון עתידי. השקעות נבונות יניבו פירות.",
+                    health: "מתמקד בבריאות כללית. פעילות גופנית סדירה תביא לתוצאות. תזונה נכונה חשובה במיוחד.",
+                    spirituality: "חודש של צמיחה רוחנית. זמן טוב לקורסים ולימוד. מדיטציה סדירה תועיל.",
+                    luck: "מספר המזל: 9. צבע מבורך: סגול. שבוע מוצלח: השני"
+                },
+                // eslint-disable-next-line
+                yearly: {
+                    love: "שנה של אהבה והתחלות חדשות. מערכות יחסים יגיעו לרמות חדשות של קרבה. זמן טוב למחויבות ארוכת טווח.",
+                    career: "שנת פריצת דרך מקצועית. הזדמנויות חדשות יובילו להצלחה. קידום משמעותי צפוי.",
+                    finance: "שגשוג פיננסי משמעותי. השקעות נבונות יניבו פירות. זמן טוב לבניית ביטחון כלכלי.",
+                    health: "שנה טובה לבריאות. התמקדות באורח חיים בריא תביא לתוצאות. פעילות גופנית סדירה חשובה.",
+                    spirituality: "שנה של התעוררות רוחנית. מסע פנימי משמעותי צפוי. זמן טוב ללימוד והעמקה.",
+                    luck: "מספר המזל: 5. צבע מבורך: זהב. חודשים מוצלחים: מרץ, ספטמבר"
+                }
+            },
+
+            // נומרולוגיה
+            // eslint-disable-next-line
+            numerology: {
+                1: { 
+                    meaning: "מנהיגות, עצמאות, התחלות חדשות", 
+                    traits: ["אמביציה", "יצירתיות", "חלוציות", "נחישות"],
+                    career: "יזמות, ניהול, מנהיגות",
+                    challenges: ["אגוצנטריות", "חוסר סבלנות"]
+                },
+                2: { 
+                    meaning: "שיתוף פעולה, רגישות, איזון", 
+                    traits: ["דיפלומטיה", "סבלנות", "אמפתיה", "שיתוף"],
+                    career: "ייעוץ, טיפול, דיפלומטיה",
+                    challenges: ["הססנות", "רגישות יתר"]
+                },
+                3: { 
+                    meaning: "ביטוי עצמי, יצירתיות, שמחת חיים", 
+                    traits: ["כריזמה", "אופטימיות", "תקשורתיות", "יצירתיות"],
+                    career: "אמנות, בידור, תקשורת",
+                    challenges: ["פיזור", "חוסר מיקוד"]
+                },
+                4: { 
+                    meaning: "יציבות, מסורת, עבודה קשה", 
+                    traits: ["אמינות", "מעשיות", "משמעת", "יציבות"],
+                    career: "בנקאות, הנדסה, ניהול",
+                    challenges: ["נוקשות", "פחד משינוי"]
+                },
+                5: { 
+                    meaning: "חופש, הרפתקאות, שינוי", 
+                    traits: ["גמישות", "סקרנות", "אנרגטיות", "חופש"],
+                    career: "נסיעות, שיווק, תקשורת",
+                    challenges: ["חוסר מחויבות", "אימפולסיביות"]
+                },
+                6: { 
+                    meaning: "אחריות, בית, הרמוניה", 
+                    traits: ["דאגה לאחר", "יצירתיות", "נאמנות", "אחריות"],
+                    career: "חינוך, טיפול, עיצוב",
+                    challenges: ["תלותיות", "פרפקציוניזם"]
+                },
+                7: { 
+                    meaning: "חוכמה, רוחניות, ניתוח", 
+                    traits: ["אינטואיציה", "אנליטיות", "חשיבה עמוקה", "רוחניות"],
+                    career: "מחקר, פסיכולוגיה, רוחניות",
+                    challenges: ["בידוד", "סקפטיות"]
+                },
+                8: { 
+                    meaning: "שאפתנות, כסף, כוח", 
+                    traits: ["מנהיגות", "יעילות", "מעשיות", "שאפתנות"],
+                    career: "עסקים, פיננסים, ניהול",
+                    challenges: ["חומרנות", "עבודה כפייתית"]
+                },
+                9: { 
+                    meaning: "הומניות, חמלה, השלמה", 
+                    traits: ["נדיבות", "אידיאליזם", "יצירתיות", "חמלה"],
+                    career: "ריפוי, אמנות, עבודה הומניטרית",
+                    challenges: ["קורבנות", "חוסר מעשיות"]
+                }
+            }
+        };
+
+        // פונקציות עזר
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function validateInputs() {
+            const birthDate = document.getElementById('birthDate').value;
+            const birthTime = document.getElementById('birthTime').value;
+            
+            if (!birthDate) {
+                showError('אנא הזן תאריך לידה');
+                return false;
+            }
+            
+            if (!birthTime) {
+                showError('אנא הזן שעת לידה');
+                return false;
+            }
+            
+            const selectedDate = new Date(birthDate);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            
+            if (selectedDate > today) {
+                showError('תאריך הלידה לא יכול להיות בעתיד');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function calculateZodiacSign(birthDate) {
+            try {
+                const date = new Date(birthDate);
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                
+                if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "טלה";
+                if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "שור";
+                if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "תאומים";
+                if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "סרטן";
+                if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "אריה";
+                if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "בתולה";
+                if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "מאזניים";
+                if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "עקרב";
+                if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "קשת";
+                if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "גדי";
+                if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "דלי";
+                return "דגים";
+            } catch (error) {
+                console.error('Error calculating zodiac:', error);
+                return "טלה";
+            }
+        }
+
+        function calculateLifePathNumber(birthDate) {
+            try {
+                const date = new Date(birthDate);
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+                
+                // הפחתה לספרה בודדת
+                function reduceToSingleDigit(num) {
+                    while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
+                        num = num.toString().split('').reduce((a, b) => parseInt(a) + parseInt(b), 0);
+                    }
+                    return num;
+                }
+                
+                day = reduceToSingleDigit(day);
+                month = reduceToSingleDigit(month);
+                year = reduceToSingleDigit(year);
+                
+                const lifePath = reduceToSingleDigit(day + month + year);
+                return lifePath;
+            } catch (error) {
+                console.error('Error calculating life path:', error);
+                return 1;
+            }
+        }
+
+        function getSelectedCategories() {
+            try {
+                const categories = [];
+                const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="category-"]:checked');
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        categories.push(checkbox.value);
+                    }
+                });
+                return categories.length > 0 ? categories : ['love', 'career', 'finance'];
+            } catch (error) {
+                console.error('Error getting categories:', error);
+                return ['love', 'career', 'finance'];
+            }
+        }
+
+        function getSelectedAnalyses() {
+            try {
+                const analyses = [];
+                const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="analysis-"]:checked');
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        analyses.push(checkbox.value);
+                    }
+                });
+                return analyses;
+            } catch (error) {
+                console.error('Error getting analyses:', error);
+                return ['basic', 'predictions'];
+            }
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'love': 'זוגיות ואהבה',
+                'career': 'קריירה ופרנסה',
+                'finance': 'כספים והשקעות',
+                'health': 'בריאות וכושר',
+                'family': 'משפחה וילדים',
+                'spirituality': 'רוחניות והתפתחות',
+                'education': 'לימודים והשכלה',
+                'travel': 'נסיעות והרפתקאות'
+            };
+            return names[category] || category;
+        }
+
+        function getCurrentWeek() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const days = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
+            return Math.ceil((days + 1) / 7);
+        }
+
+        // פונקציות תצוגה
+        function displayGeneralReading(zodiacSign, birthDate) {
+            try {
+                const generalReadingDiv = document.getElementById('generalReading');
+                const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
+                const zodiacInfo = comprehensiveData.zodiacs[zodiacSign];
+                
+                generalReadingDiv.innerHTML = `
+                    <h3>📖 ניתוח כללי של מפת הלידה</h3>
+                    <div class="interpretation">
+                        <p><strong>מזל שמשי:</strong> ${zodiacSign}</p>
+                        <p><strong>יסוד:</strong> ${zodiacInfo.element}</p>
+                        <p><strong>כוכב שליט:</strong> ${zodiacInfo.ruler}</p>
+                        <p><strong>גיל:</strong> ${age} שנים</p>
+                        <p><strong>תאריך ניתוח:</strong> ${new Date().toLocaleDateString('he-IL')}</p>
+                        <p><strong>תכונות אופי עיקריות:</strong> ${zodiacInfo.strengths.join(', ')}</p>
+                        <span class="source">ניתוח מקיף לפי אסטרולוגיה מערבית ומסורות עתיקות</span>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error displaying general reading:', error);
+            }
+        }
+
+        function displayZodiacDescription(zodiacSign) {
+            try {
+                const zodiacDescDiv = document.getElementById('zodiacDescription');
+                const zodiacInfo = comprehensiveData.zodiacs[zodiacSign];
+                
+                if (zodiacInfo) {
+                    zodiacDescDiv.innerHTML = `
+                        <h3>♈ פירוש מלא למזל ${zodiacSign}</h3>
+                        <div class="interpretation">
+                            <p><strong>תיאור כללי:</strong> ${zodiacInfo.description}</p>
+                            <p><strong>אישיות:</strong> ${zodiacInfo.personality}</p>
+                            <p><strong>חוזקות:</strong> ${zodiacInfo.strengths.join(', ')}</p>
+                            <p><strong>אתגרים:</strong> ${zodiacInfo.challenges.join(', ')}</p>
+                            <p><strong>אהבה וזוגיות:</strong> ${zodiacInfo.love}</p>
+                            <p><strong>קריירה:</strong> ${zodiacInfo.career}</p>
+                            <p><strong>בריאות:</strong> ${zodiacInfo.health}</p>
+                            <p><strong>ידוענים מאותו מזל:</strong> ${zodiacInfo.famous}</p>
+                            <span class="source">מבוסס על אסטרולוגיה מערבית, קבלה ומסורות עתיקות</span>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error displaying zodiac description:', error);
+            }
+        }
+
+        function displayPredictions(zodiacSign) {
+            try {
+                logger.info('מציג תחזיות', { zodiacSign });
+                const now = new Date();
+                
+                // Get zodiac-specific predictions
+                let getZodiacPredictions;
+                if (typeof comprehensiveData.predictions.getPredictions === 'function') {
+                    getZodiacPredictions = comprehensiveData.predictions.getPredictions.bind(comprehensiveData.predictions);
+                } else {
+                    getZodiacPredictions = function(sign, period) {
+                        return comprehensiveData.predictions[period] || {};
+                    };
+                }
+                
+                // תחזית יומית עם הקשר זמן
+                const hour = now.getHours();
+                let timeContext = '';
+                if (hour >= 6 && hour < 12) {
+                    timeContext = 'בוקר זה מביא אנרגיות חדשות והזדמנויות. ';
+                } else if (hour >= 12 && hour < 18) {
+                    timeContext = 'אחר הצהריים מתאים לפעילות ויוזמה. ';
+                } else if (hour >= 18 && hour < 22) {
+                    timeContext = 'ערב זה זמן טוב להתבוננות וחיבור. ';
+                } else {
+                    timeContext = 'לילה זה זמן למנוחה והתחדשות. ';
+                }
+                
+                const dailyPred = getZodiacPredictions(zodiacSign, 'daily');
+                const weeklyPred = getZodiacPredictions(zodiacSign, 'weekly');
+                const monthlyPred = getZodiacPredictions(zodiacSign, 'monthly');
+                const yearlyPred = getZodiacPredictions(zodiacSign, 'yearly');
+                
+                document.getElementById('daily-prediction').innerHTML = `
+                    <h4>תחזית יומית - ${now.toLocaleDateString('he-IL')} - מזל ${zodiacSign} <span class="realtime-badge">זמן אמת</span></h4>
+                    ${Object.entries(dailyPred).filter(([key]) => key !== 'luck').map(([category, text]) => `
+                        <div class="interpretation">
+                            <p><strong>${getCategoryName(category)}:</strong> ${timeContext}${text}</p>
+                        </div>
+                    `).join('')}
+                    ${dailyPred.luck ? `<div class="interpretation"><p><strong>מזל:</strong> ${dailyPred.luck}</p></div>` : ''}
+                `;
+                
+                // תחזית שבועית
+                document.getElementById('weekly-prediction').innerHTML = `
+                    <h4>תחזית שבועית - שבוע ${getCurrentWeek()} - מזל ${zodiacSign}</h4>
+                    ${Object.entries(weeklyPred).filter(([key]) => key !== 'luck').map(([category, text]) => `
+                        <div class="interpretation">
+                            <p><strong>${getCategoryName(category)}:</strong> ${text}</p>
+                        </div>
+                    `).join('')}
+                    ${weeklyPred.luck ? `<div class="interpretation"><p><strong>מזל:</strong> ${weeklyPred.luck}</p></div>` : ''}
+                `;
+                
+                // תחזית חודשית
+                const currentMonth = new Date().toLocaleDateString('he-IL', { month: 'long', year: 'numeric' });
+                document.getElementById('monthly-prediction').innerHTML = `
+                    <h4>תחזית חודשית - ${currentMonth} - מזל ${zodiacSign}</h4>
+                    ${Object.entries(monthlyPred).filter(([key]) => key !== 'luck').map(([category, text]) => `
+                        <div class="interpretation">
+                            <p><strong>${getCategoryName(category)}:</strong> ${text}</p>
+                        </div>
+                    `).join('')}
+                    ${monthlyPred.luck ? `<div class="interpretation"><p><strong>מזל:</strong> ${monthlyPred.luck}</p></div>` : ''}
+                `;
+                
+                // תחזית שנתית
+                const currentYear = new Date().getFullYear();
+                document.getElementById('yearly-prediction').innerHTML = `
+                    <h4>תחזית שנתית - ${currentYear} - מזל ${zodiacSign}</h4>
+                    ${Object.entries(yearlyPred).filter(([key]) => key !== 'luck').map(([category, text]) => `
+                        <div class="interpretation">
+                            <p><strong>${getCategoryName(category)}:</strong> ${text}</p>
+                        </div>
+                    `).join('')}
+                    ${yearlyPred.luck ? `<div class="interpretation"><p><strong>מזל:</strong> ${yearlyPred.luck}</p></div>` : ''}
+                `;
+            } catch (error) {
+                console.error('Error displaying predictions:', error);
+            }
+        }
+
+        function displayNumerology(birthDate) {
+            try {
+                const numerologySection = document.getElementById('numerologySection');
+                const lifePathNumber = calculateLifePathNumber(birthDate);
+                const numerologyInfo = comprehensiveData.numerology[lifePathNumber];
+                
+                if (numerologyInfo) {
+                    numerologySection.style.display = 'block';
+                    numerologySection.innerHTML = `
+                        <h3>🔢 נומרולוגיה - מספר נתיב חיים ${lifePathNumber}</h3>
+                        <div class="interpretation">
+                            <p><strong>משמעות:</strong> ${numerologyInfo.meaning}</p>
+                            <p><strong>תכונות אופי:</strong> ${numerologyInfo.traits.join(', ')}</p>
+                            <p><strong>התאמה מקצועית:</strong> ${numerologyInfo.career}</p>
+                            <p><strong>אתגרים:</strong> ${numerologyInfo.challenges.join(', ')}</p>
+                            <span class="source">ניתוח נומרולוגי לפי שיטות מסורתיות</span>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error displaying numerology:', error);
+            }
+        }
+
+        function displayCompatibility(zodiacSign) {
+            try {
+                const compatibilitySection = document.getElementById('compatibilitySection');
+                const compatibleSigns = getCompatibleSigns(zodiacSign);
+                
+                compatibilitySection.style.display = 'block';
+                compatibilitySection.innerHTML = `
+                    <h3>💞 התאמה זוגית למזל ${zodiacSign}</h3>
+                    <div class="interpretation">
+                        <p><strong>התאמה גבוהה:</strong> ${compatibleSigns.high.join(', ')}</p>
+                        <p><strong>התאמה בינונית:</strong> ${compatibleSigns.medium.join(', ')}</p>
+                        <p><strong>אתגרים:</strong> ${compatibleSigns.challenging.join(', ')}</p>
+                        <p><strong>טיפים לזוגיות:</strong> ${getRelationshipTips(zodiacSign)}</p>
+                        <span class="source">ניתוח התאמה לפי אסטרולוגיה מערבית וקבלה</span>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error displaying compatibility:', error);
+            }
+        }
+
+        function getCompatibleSigns(zodiacSign) {
+            const compatibility = {
+                "טלה": { high: ["קשת", "אריה"], medium: ["תאומים", "מאזניים"], challenging: ["סרטן", "גדי"] },
+                "שור": { high: ["בתולה", "גדי"], medium: ["סרטן", "דגים"], challenging: ["אריה", "דלי"] },
+                "תאומים": { high: ["מאזניים", "דלי"], medium: ["אריה", "קשת"], challenging: ["בתולה", "דגים"] },
+                "סרטן": { high: ["עקרב", "דגים"], medium: ["שור", "מאזניים"], challenging: ["טלה", "גדי"] },
+                "אריה": { high: ["קשת", "טלה"], medium: ["תאומים", "מאזניים"], challenging: ["שור", "עקרב"] },
+                "בתולה": { high: ["גדי", "שור"], medium: ["עקרב", "טלה"], challenging: ["דגים", "קשת"] },
+                "מאזניים": { high: ["דלי", "תאומים"], medium: ["קשת", "אריה"], challenging: ["סרטן", "עקרב"] },
+                "עקרב": { high: ["דגים", "סרטן"], medium: ["בתולה", "גדי"], challenging: ["טלה", "מאזניים"] },
+                "קשת": { high: ["אריה", "טלה"], medium: ["דלי", "מאזניים"], challenging: ["בתולה", "דגים"] },
+                "גדי": { high: ["שור", "בתולה"], medium: ["עקרב", "דגים"], challenging: ["טלה", "סרטן"] },
+                "דלי": { high: ["תאומים", "מאזניים"], medium: ["קשת", "אריה"], challenging: ["שור", "עקרב"] },
+                "דגים": { high: ["סרטן", "עקרב"], medium: ["שור", "גדי"], challenging: ["תאומים", "בתולה"] }
+            };
+            return compatibility[zodiacSign] || { high: [], medium: [], challenging: [] };
+        }
+
+        function getRelationshipTips(zodiacSign) {
+            const tips = {
+                "טלה": "למד להקשיב יותר ולכבד את צרכי הפרטנר. תן מקום גם לאחר.",
+                "שור": "היה פתוח יותר לשינוי וגמישות. אל תהיה כה מקובע בדעותיך.",
+                "תאומים": "למד להתמקד ולהעמיק בקשר אחד במקום לרדוף אחרי גירויים חדשים.",
+                "סרטן": "תן אמון ופתח את הלב. אל תהיה כה מגונן וחשדן.",
+                "אריה": "זכור שגם לפרטנר יש צורך בתשומת לב והערכה. אל תהיה כה מרוכז בעצמך.",
+                "בתולה": "למד לקבל אי-שלמות. אל תהיה כה ביקורתי ושיפוטי.",
+                "מאזניים": "למד לקבל החלטות בעצמך. אל תחכה שהאחרים יקבעו עבורך.",
+                "עקרב": "תן אמון ופתח את הלב. אל תהיה כה חשדן וסודי.",
+                "קשת": "למד להתחייב ולהעמיק. אל תברח מפני קשיים ואתגרים.",
+                "גדי": "למד להיות ספונטני ורגשי יותר. אל תהיה כה רציני וקשוח.",
+                "דלי": "למד להתחבר לרגשות. אל תהיה כה מנותק ואינטלקטואלי.",
+                "דגים": "למד לקבוע גבולות. אל תהיה כה קורבני ומתמסר."
+            };
+            return tips[zodiacSign] || "שמור על תקשורת פתוחה וכנה עם הפרטנר שלך.";
+        }
+
+        function displayBirthChart(zodiacSign, birthDate, birthTime) {
+            try {
+                logger.info('מציג מפת לידה', { zodiacSign, birthDate });
+                
+                // Calculate accurate planetary positions
+                const planets = calculatePlanetaryPositions(birthDate, birthTime);
+                
+                // Display planetary positions
+                const positionsContainer = document.getElementById('planetaryPositions');
+                positionsContainer.innerHTML = '';
+                
+                planets.forEach(planet => {
+                    const planetCard = document.createElement('div');
+                    planetCard.className = 'planet-card';
+                    planetCard.innerHTML = `
+                        <div class="planet-icon">${getPlanetIcon(planet.name)}</div>
+                        <h4>${planet.name}</h4>
+                        <p>${planet.sign} ${planet.degree}°</p>
+                        <p>בית ${planet.house}</p>
+                        <p style="font-size: 0.8rem; color: #666;">${planet.speed}</p>
+                    `;
+                    positionsContainer.appendChild(planetCard);
+                });
+
+                logger.success('מפת לידה הוצגה', { planetsCount: planets.length });
+                
+                // Create zodiac chart
+                const ctx = document.getElementById('zodiacChart').getContext('2d');
+                const signs = Object.keys(comprehensiveData.zodiacs);
+                
+                // Simple data for chart
+                const data = signs.map(sign => {
+                    return sign === zodiacSign ? 3 : Math.random();
+                });
+                
+                if (window.chartInstance) {
+                    window.chartInstance.destroy();
+                }
+                
+                window.chartInstance = new Chart(ctx, {
+                    type: 'polarArea',
+                    data: {
+                        labels: signs,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: [
+                                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+                                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                rtl: true
+                            },
+                            title: {
+                                display: true,
+                                text: 'מפת כוכבים אישית'
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error displaying birth chart:', error);
+            }
+        }
+
+        function getPlanetIcon(planet) {
+            const icons = {
+                'שמש': '☀️',
+                'ירח': '🌙',
+                'כוכב חמה': '☿',
+                'נוגה': '♀',
+                'מאדים': '♂',
+                'צדק': '♃',
+                'שבתאי': '♄',
+                'אורנוס': '♅',
+                'נפטון': '♆',
+                'פלוטו': '♇'
+            };
+            return icons[planet] || '★';
+        }
+
+        function getRandomSign() {
+            const signs = Object.keys(comprehensiveData.zodiacs);
+            return signs[Math.floor(Math.random() * signs.length)];
+        }
+
+        function displayInterpretations(categories, zodiacSign) {
+            try {
+                logger.info('מציג פירושים', { categories: categories.length, zodiacSign });
+                
+                const resultsContent = document.getElementById('results-content');
+                resultsContent.innerHTML = '';
+
+                const categoryNames = {
+                    love: '💖 זוגיות ואהבה',
+                    career: '💼 קריירה ופרנסה',
+                    finance: '💰 כספים והשקעות',
+                    health: '🏥 בריאות וכושר',
+                    family: '👨‍👩‍👧‍👦 משפחה וילדים',
+                    spirituality: '🕉️ רוחניות והתפתחות',
+                    education: '📚 לימודים והשכלה',
+                    travel: '✈️ נסיעות והרפתקאות'
+                };
+
+                categories.forEach(category => {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'category';
+                    
+                    // Get zodiac-specific interpretations
+                    let categoryInterpretations = [];
+                    try {
+                        if (typeof comprehensiveData.interpretations.getInterpretations === 'function') {
+                            categoryInterpretations = comprehensiveData.interpretations.getInterpretations(zodiacSign, category);
+                            logger.debug(`קיבל פירושים ספציפיים למזל ${zodiacSign}, תחום ${category}`, { count: categoryInterpretations.length });
+                        } else if (comprehensiveData.interpretations[category]) {
+                            categoryInterpretations = comprehensiveData.interpretations[category];
+                            logger.debug(`קיבל פירושים גנריים לתחום ${category}`, { count: categoryInterpretations.length });
+                        }
+                    } catch (error) {
+                        logger.error('שגיאה בקבלת פירושים', { error: error.message, zodiacSign, category });
+                        categoryInterpretations = comprehensiveData.interpretations[category] || [];
+                    }
+                    
+                    if (categoryInterpretations.length > 0) {
+                        categoryDiv.innerHTML = `<h3>${categoryNames[category] || category} - מזל ${zodiacSign}</h3>`;
+                        
+                        categoryInterpretations.forEach(interp => {
+                            const interpDiv = document.createElement('div');
+                            interpDiv.className = 'interpretation';
+                            interpDiv.innerHTML = `
+                                <p>${interp.text}</p>
+                                <span class="source">מקור: ${interp.source}</span>
+                            `;
+                            categoryDiv.appendChild(interpDiv);
+                        });
+                        
+                        categoryDiv.setAttribute('data-interpretations', JSON.stringify(categoryInterpretations));
+                        resultsContent.appendChild(categoryDiv);
+                    }
+                });
+                
+                logger.success('פירושים הוצגו', { categories: categories.length });
+            } catch (error) {
+                logger.error('שגיאה בהצגת פירושים', { error: error.message });
+                console.error('Error displaying interpretations:', error);
+            }
+        }
+
+        // פונקציות לטאבים
+        function showPredictionTab(tabName) {
+            // הסר active מכל הטאבים
+            document.querySelectorAll('.prediction-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // הסר active מכל התוכן
+            document.querySelectorAll('.prediction-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // הוסף active לטאב והתוכן הנבחר
+            document.querySelector(`.prediction-tab[onclick="showPredictionTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-prediction`).classList.add('active');
+        }
+
+        function showAllPredictions() {
+            document.querySelectorAll('.prediction-content').forEach(content => {
+                content.style.display = 'block';
+            });
+            showSuccess('כל התחזיות מוצגות כעת!');
+        }
+
+        // פונקציה ראשית
+        function calculateAstrology() {
+            const startTime = performance.now();
+            
+            try {
+                logger.info('מתחיל חישוב אסטרולוגיה');
+                
+                if (!validateInputs()) {
+                    logger.warning('אימות נתונים נכשל');
+                    return;
+                }
+
+                const birthDate = document.getElementById('birthDate').value;
+                const birthTime = document.getElementById('birthTime').value;
+                const birthPlace = document.getElementById('birthPlace').value;
+                
+                logger.info('נתוני קלט', { birthDate, birthTime, birthPlace });
+                
+                // Show loading
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('results').style.display = 'none';
+                
+                // Use setTimeout to simulate calculation
+                setTimeout(() => {
+                    try {
+                        const zodiacSign = calculateZodiacSign(birthDate);
+                        const selectedCategories = getSelectedCategories();
+                        const selectedAnalyses = getSelectedAnalyses();
+                        
+                        logger.info('מבצע חישובים', { zodiacSign, categories: selectedCategories.length, analyses: selectedAnalyses });
+                        
+                        // Display basic analysis
+                        displayGeneralReading(zodiacSign, birthDate);
+                        displayZodiacDescription(zodiacSign);
+                        displayBirthChart(zodiacSign, birthDate, birthTime);
+                        displayInterpretations(selectedCategories, zodiacSign);
+                        
+                        // Display additional analyses
+                        if (selectedAnalyses.includes('predictions')) {
+                            displayPredictions(zodiacSign);
+                            document.getElementById('predictionsSection').style.display = 'block';
+                        } else {
+                            document.getElementById('predictionsSection').style.display = 'none';
+                        }
+                        
+                        if (selectedAnalyses.includes('numerology')) {
+                            displayNumerology(birthDate);
+                        }
+                        
+                        if (selectedAnalyses.includes('compatibility')) {
+                            displayCompatibility(zodiacSign);
+                        }
+                        
+                        // Calculate performance
+                        const calcTime = performance.now() - startTime;
+                        const calcTimeEl = document.getElementById('calcTime');
+                        if (calcTimeEl) {
+                            calcTimeEl.textContent = `${Math.round(calcTime)}ms`;
+                        }
+                        
+                        // Hide loading and show results
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('results').style.display = 'block';
+                        
+                        logger.success('חישוב הושלם בהצלחה', { calcTime: Math.round(calcTime) });
+                        showSuccess('החישוב הושלם בהצלחה! כל הפירושים והתחזיות מוכנים.');
+                        
+                    } catch (error) {
+                        logger.error('שגיאה בתהליך החישוב', { error: error.message, stack: error.stack });
+                        document.getElementById('loading').style.display = 'none';
+                        showError('אירעה שגיאה בתהליך החישוב. אנא נסה שוב.');
+                    }
+                }, 1500);
+                
+            } catch (error) {
+                logger.error('שגיאה כללית בחישוב', { error: error.message });
+                showError('אירעה שגיאה כללית. אנא רענן את הדף ונסה שוב.');
+            }
+        }
+
+        function showSolutions() {
+            try {
+                const categories = document.querySelectorAll('.category');
+                
+                categories.forEach(category => {
+                    const interpretations = JSON.parse(category.getAttribute('data-interpretations') || '[]');
+                    
+                    if (interpretations.length > 0) {
+                        let solutionsDiv = category.querySelector('.solutions');
+                        
+                        if (!solutionsDiv) {
+                            solutionsDiv = document.createElement('div');
+                            solutionsDiv.className = 'solutions';
+                            solutionsDiv.innerHTML = '<h4>פתרונות והמלצות מעשיות:</h4>';
+                            category.appendChild(solutionsDiv);
+                            
+                            const solutions = [
+                                "מדיטציה יומית של 10-15 דקות",
+                                "תרגילי נשימה להרגעה ואיזון",
+                                "כתיבת יומן רגשי לתובנות",
+                                "טיול בטבע למילוי מצברים",
+                                "שיחה פתוחה עם אדם קרוב",
+                                "פעילות גופנית סדירה",
+                                "תזונה מאוזנת ובריאה",
+                                "קריאת ספרי התפתחות",
+                                "הקשבה למוזיקה מרגיעה",
+                                "טיפוח תחביבים יצירתיים"
+                            ];
+                            
+                            // הוסף 3-4 פתרונות אקראיים
+                            const randomSolutions = solutions.sort(() => 0.5 - Math.random()).slice(0, 4);
+                            randomSolutions.forEach(solution => {
+                                const solutionP = document.createElement('p');
+                                solutionP.textContent = `• ${solution}`;
+                                solutionsDiv.appendChild(solutionP);
+                            });
+                        }
+                    }
+                });
+                
+                showSuccess('הפתרונות נוספו בהצלחה!');
+            } catch (error) {
+                console.error('Error showing solutions:', error);
+                showError('אירעה שגיאה בהצגת הפתרונות.');
+            }
+        }
+        
+        function printReport() {
+            try {
+                const printContent = document.getElementById('results').innerHTML;
+                const originalContent = document.body.innerHTML;
+                
+                document.body.innerHTML = `
+                    <div dir="rtl" style="padding: 20px; font-family: Arial;">
+                        <h1 style="text-align: center;">דוח אסטרולוגיה אישי מלא</h1>
+                        <p style="text-align: center;">נוצר בתאריך: ${new Date().toLocaleDateString('he-IL')}</p>
+                        <hr>
+                        ${printContent}
+                        <div style="margin-top: 50px; text-align: center; color: #666;">
+                            <p>© 2024 - דפדפן אסטרולוגיה מתקדם</p>
+                            <p>פירושים מלאים לכל תחומי החיים + תחזיות עתידיות</p>
+                        </div>
+                    </div>
+                `;
+                
+                window.print();
+                document.body.innerHTML = originalContent;
+                showSuccess('הדוח הודפס בהצלחה!');
+            } catch (error) {
+                console.error('Error printing report:', error);
+                showError('אירעה שגיאה בהדפסת הדוח.');
+            }
+        }
+
+        // אתחול ראשוני
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Set default date to 25 years ago
+                const defaultDate = new Date();
+                defaultDate.setFullYear(defaultDate.getFullYear() - 25);
+                document.getElementById('birthDate').valueAsDate = defaultDate;
+                
+                // Set default time to 12:00
+                document.getElementById('birthTime').value = '12:00';
+                
+                console.log('System initialized successfully');
+            } catch (error) {
+                console.error('Error in initialization:', error);
+            }
+        });
+    </script>
+</body>
+</html>

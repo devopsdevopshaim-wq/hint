@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS Hub — המרכז האישי המאוחד שלך</title>
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1a237e;
+    --secondary: #6a11cb;
+    --accent: #2575fc;
+    --success: #28a745;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --bg: #eef1fa;
+    --card: #ffffff;
+    --text: #22263a;
+    --muted: #6b7280;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Heebo', sans-serif;
+    background: linear-gradient(135deg, #0c2461 0%, #1a237e 45%, #6a11cb 100%);
+    min-height: 100vh;
+    color: var(--text);
+  }
+  .shell { max-width: 1500px; margin: 0 auto; padding: 20px; }
+  header.app-header {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    border-radius: 18px;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    backdrop-filter: blur(6px);
+  }
+  header.app-header h1 { font-size: 1.9rem; }
+  header.app-header p { opacity: .85; font-size: .95rem; margin-top: 4px; }
+  .gear-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: transform .2s;
+  }
+  .gear-btn:hover { transform: rotate(35deg); background: rgba(255,255,255,0.22); }
+
+  nav.tabs {
+    display: flex;
+    gap: 10px;
+    margin: 22px 0;
+    flex-wrap: wrap;
+  }
+  nav.tabs button {
+    flex: 1 1 180px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 14px;
+    padding: 14px 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  nav.tabs button:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+  nav.tabs button.active {
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    border-color: transparent;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  main.panel {
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    min-height: 70vh;
+    overflow: hidden;
+  }
+  .tab-view { display: none; height: 100%; }
+  .tab-view.active { display: block; }
+
+  iframe.tool-frame {
+    width: 100%;
+    height: 85vh;
+    border: 0;
+    display: block;
+  }
+
+  /* ---- DiraFinder tab ---- */
+  #view-realestate { padding: 26px; }
+  .re-toolbar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .re-toolbar label { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+  .re-toolbar input, .re-toolbar select {
+    width: 100%; padding: 10px 12px; border-radius: 10px; border: 2px solid #e1e5e9; font-size: .95rem;
+  }
+  .re-toolbar .re-actions { display: flex; align-items: flex-end; gap: 10px; }
+  .btn {
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    color: #fff; border: none; padding: 12px 20px; border-radius: 10px;
+    cursor: pointer; font-weight: 600; font-size: .95rem; transition: transform .2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.secondary { background: #eef1fa; color: var(--primary); border: 1px solid #d7deee; }
+
+  #re-status { margin: 10px 0; font-size: .9rem; color: var(--muted); }
+  #re-status.error { color: var(--danger); font-weight: 600; }
+
+  .re-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+    margin-top: 10px;
+  }
+  .re-card {
+    border: 1px solid #e7eaf3;
+    border-radius: 14px;
+    padding: 18px;
+    background: #fbfcff;
+    position: relative;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  }
+  .re-score {
+    position: absolute; top: 14px; left: 14px;
+    width: 46px; height: 46px; border-radius: 50%;
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.05rem;
+  }
+  .re-card h3 { margin-left: 60px; font-size: 1.05rem; color: var(--primary); }
+  .re-card .re-addr { font-size: .85rem; color: var(--muted); margin: 4px 0 10px; }
+  .re-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .re-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: .8rem; color: #444; margin-bottom: 10px; }
+  .re-meta span { background: #eef1fa; padding: 4px 9px; border-radius: 20px; }
+  .re-gap { font-size: .85rem; margin-bottom: 8px; }
+  .re-gap.neg { color: var(--success); } .re-gap.pos { color: var(--danger); }
+  .re-flags { margin-bottom: 8px; }
+  .re-flag { display: inline-block; font-size: .75rem; padding: 3px 8px; border-radius: 12px; margin: 2px; color: #fff; }
+  .re-flag.low { background: #7f8c8d; } .re-flag.medium { background: var(--warning); } .re-flag.high { background: var(--danger); }
+  .re-rationale { font-size: .85rem; color: #333; line-height: 1.5; }
+  .re-card a.re-link { display: inline-block; margin-top: 10px; font-size: .85rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+  .re-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+
+  /* ---- JARVIS tab ---- */
+  #view-jarvis { padding: 26px; height: 85vh; display: flex; flex-direction: column; }
+  #jarvis-config-note {
+    background: #fff3cd; border: 1px solid #ffe08a; color: #7a5b00;
+    padding: 14px 18px; border-radius: 10px; margin-bottom: 16px; font-size: .9rem;
+  }
+  #jarvis-chat-mount { flex: 1; width: 100%; }
+
+  /* ---- Settings modal ---- */
+  .modal-backdrop {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    align-items: center; justify-content: center; z-index: 999; padding: 20px;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal-box {
+    background: #fff; border-radius: 16px; max-width: 560px; width: 100%;
+    padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  }
+  .modal-box h2 { color: var(--primary); margin-bottom: 6px; }
+  .modal-box p.hint { font-size: .85rem; color: var(--muted); margin-bottom: 20px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-weight: 600; margin-bottom: 6px; font-size: .9rem; }
+  .field input { width: 100%; padding: 10px 12px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: .9rem; direction: ltr; text-align: right; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+
+  footer.app-footer { text-align: center; color: rgba(255,255,255,0.8); padding: 24px 10px; font-size: .85rem; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="app-header">
+    <div>
+      <h1>🧠 JARVIS Hub</h1>
+      <p>אסטרולוגיה · לוח שנה עברי · DiraFinder נדל"ן · הצ'אט האישי שלך — הכל במקום אחד, מסונכרן דרך n8n</p>
+    </div>
+    <button class="gear-btn" id="openSettingsBtn" title="הגדרות חיבור">⚙️</button>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button data-tab="astrology" class="active">✨ אסטרולוגיה</button>
+    <button data-tab="calendar">📅 לוח עברי</button>
+    <button data-tab="realestate">🏠 DiraFinder</button>
+    <button data-tab="jarvis">🤖 JARVIS</button>
+  </nav>
+
+  <main class="panel">
+    <section class="tab-view active" id="view-astrology">
+      <iframe class="tool-frame" data-src="tools/astrology.html" title="אסטרולוגיה"></iframe>
+    </section>
+
+    <section class="tab-view" id="view-calendar">
+      <iframe class="tool-frame" data-src="tools/hebrew-calendar.html" title="לוח שנה עברי"></iframe>
+    </section>
+
+    <section class="tab-view" id="view-realestate">
+      <div class="re-toolbar">
+        <div>
+          <label>עיר</label>
+          <input type="text" id="re-city" placeholder="תל אביב יפו">
+        </div>
+        <div>
+          <label>סוג עסקה</label>
+          <select id="re-deal-type">
+            <option value="">הכל</option>
+            <option value="sale">מכירה</option>
+            <option value="rent">שכירות</option>
+          </select>
+        </div>
+        <div>
+          <label>ציון מינימלי</label>
+          <input type="number" id="re-min-score" min="0" max="100" placeholder="0">
+        </div>
+        <div>
+          <label>מספר תוצאות</label>
+          <input type="number" id="re-limit" min="1" max="200" value="30">
+        </div>
+        <div class="re-actions">
+          <button class="btn" id="re-refresh">🔄 רענן נתונים</button>
+        </div>
+      </div>
+      <div id="re-status">מגדירים חיבור ל-n8n בהגדרות (⚙️) כדי לטעון נתונים אמיתיים.</div>
+      <div class="re-grid" id="re-grid"></div>
+    </section>
+
+    <section class="tab-view" id="view-jarvis">
+      <div id="jarvis-config-note">
+        כדי להפעיל את הצ'אט, פתחו את ההגדרות (⚙️) והזינו את כתובת ה-Webhook של ה-Chat Trigger מתוך זרימת ה-n8n המאוחדת.
+      </div>
+      <div id="jarvis-chat-mount"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">JARVIS Hub — מריץ אסטרולוגיה ולוח עברי מקומית, ו-DiraFinder + JARVIS דרך n8n אחד ומאוחד.</footer>
+</div>
+
+<div class="modal-backdrop" id="settingsModal">
+  <div class="modal-box">
+    <h2>הגדרות חיבור</h2>
+    <p class="hint">הערכים נשמרים רק בדפדפן שלך (localStorage). לא נשלחים לשום מקום אחר.</p>
+    <div class="field">
+      <label>JARVIS Chat Webhook URL (n8n Chat Trigger)</label>
+      <input type="text" id="cfg-jarvis" placeholder="https://your-n8n.example.com/webhook/xxxxxxxx-xxxx">
+    </div>
+    <div class="field">
+      <label>DiraFinder Listings Webhook URL (n8n Webhook)</label>
+      <input type="text" id="cfg-listings" placeholder="https://your-n8n.example.com/webhook/dirafinder/listings">
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="cfg-cancel">ביטול</button>
+      <button class="btn" id="cfg-save">שמור</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+const CONFIG_KEY = 'jarvisHub.config';
+
+function loadConfig() {
+  try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveConfig(cfg) { localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }
+
+let config = loadConfig();
+let chatStarted = false;
+
+// ---------- Tabs ----------
+const tabButtons = document.querySelectorAll('nav.tabs button');
+const tabViews = document.querySelectorAll('.tab-view');
+
+function activateTab(name) {
+  tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  tabViews.forEach(v => v.classList.toggle('active', v.id === `view-${name}`));
+
+  const view = document.getElementById(`view-${name}`);
+  const iframe = view?.querySelector('iframe[data-src]');
+  if (iframe && !iframe.src) iframe.src = iframe.dataset.src; // lazy-load heavy tools
+
+  if (name === 'jarvis') startJarvisChat();
+  if (name === 'realestate' && !document.getElementById('re-grid').dataset.loaded) fetchListings();
+
+  localStorage.setItem('jarvisHub.lastTab', name);
+}
+
+tabButtons.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
+
+// ---------- Settings modal ----------
+const modal = document.getElementById('settingsModal');
+document.getElementById('openSettingsBtn').addEventListener('click', () => {
+  document.getElementById('cfg-jarvis').value = config.jarvisWebhook || '';
+  document.getElementById('cfg-listings').value = config.listingsWebhook || '';
+  modal.classList.add('active');
+});
+document.getElementById('cfg-cancel').addEventListener('click', () => modal.classList.remove('active'));
+document.getElementById('cfg-save').addEventListener('click', () => {
+  config = {
+    jarvisWebhook: document.getElementById('cfg-jarvis').value.trim(),
+    listingsWebhook: document.getElementById('cfg-listings').value.trim(),
+  };
+  saveConfig(config);
+  modal.classList.remove('active');
+  location.reload(); // simplest way to re-init the chat widget with the new URL
+});
+
+// ---------- JARVIS chat ----------
+function startJarvisChat() {
+  const note = document.getElementById('jarvis-config-note');
+  if (!config.jarvisWebhook) { note.style.display = 'block'; return; }
+  note.style.display = 'none';
+  if (chatStarted) return;
+  chatStarted = true;
+  createChat({
+    webhookUrl: config.jarvisWebhook,
+    target: '#jarvis-chat-mount',
+    mode: 'fullscreen',
+    showWelcomeScreen: false,
+    initialMessages: ['שלום, אני JARVIS. איך אפשר לעזור?'],
+    i18n: {
+      en: {
+        title: 'JARVIS',
+        subtitle: 'העוזר האישי החכם שלך — זמין 24/7',
+        footer: '',
+        getStarted: 'התחל שיחה',
+        inputPlaceholder: 'כתוב את השאלה שלך...',
+      },
+    },
+  });
+}
+
+// ---------- DiraFinder listings ----------
+async function fetchListings() {
+  const grid = document.getElementById('re-grid');
+  const status = document.getElementById('re-status');
+  grid.dataset.loaded = '1';
+
+  if (!config.listingsWebhook) {
+    status.textContent = 'לא הוגדרה כתובת Webhook ל-DiraFinder. פתחו הגדרות (⚙️) והזינו אותה.';
+    status.classList.add('error');
+    return;
+  }
+
+  const params = new URLSearchParams();
+  const city = document.getElementById('re-city').value.trim();
+  const dealType = document.getElementById('re-deal-type').value;
+  const minScore = document.getElementById('re-min-score').value;
+  const limit = document.getElementById('re-limit').value || 30;
+  if (city) params.set('city', city);
+  if (dealType) params.set('deal_type', dealType);
+  if (minScore) params.set('min_score', minScore);
+  params.set('limit', limit);
+
+  status.classList.remove('error');
+  status.textContent = 'טוען נתונים...';
+  grid.innerHTML = '';
+
+  try {
+    const res = await fetch(`${config.listingsWebhook}?${params.toString()}`);
+    if (!res.ok) throw new Error(`שגיאת שרת (${res.status})`);
+    const rows = await res.json();
+    renderListings(Array.isArray(rows) ? rows : (rows.items || []));
+    status.textContent = `נמצאו ${Array.isArray(rows) ? rows.length : (rows.items || []).length} נכסים.`;
+  } catch (err) {
+    status.textContent = `שגיאה בטעינת הנתונים: ${err.message}`;
+    status.classList.add('error');
+  }
+}
+
+function scoreColor(score) {
+  if (score >= 75) return '#28a745';
+  if (score >= 50) return '#f39c12';
+  return '#e74c3c';
+}
+
+function renderListings(rows) {
+  const grid = document.getElementById('re-grid');
+  if (!rows.length) {
+    grid.innerHTML = '<div class="re-empty">לא נמצאו נכסים תואמים. נסו לשנות את הפילטרים.</div>';
+    return;
+  }
+  grid.innerHTML = rows.map(r => {
+    const flags = safeJson(r.red_flags, []);
+    const gapPct = r.market_gap_pct != null ? Number(r.market_gap_pct * 100).toFixed(1) : null;
+    return `
+      <div class="re-card">
+        <div class="re-score" style="background:${scoreColor(r.score ?? 0)}">${r.score ?? '-'}</div>
+        <h3>${escapeHtml(r.street || r.neighborhood || r.city || 'נכס')} ${escapeHtml(r.house_no || '')}</h3>
+        <div class="re-addr">${escapeHtml(r.neighborhood || '')} · ${escapeHtml(r.city || '')}</div>
+        <div class="re-price">${formatMoney(r.price_ils)}</div>
+        <div class="re-meta">
+          ${r.rooms ? `<span>${r.rooms} חד'</span>` : ''}
+          ${r.built_sqm ? `<span>${r.built_sqm} מ"ר</span>` : ''}
+          ${r.floor != null ? `<span>קומה ${r.floor}</span>` : ''}
+          ${r.recommended_use ? `<span>${translateUse(r.recommended_use)}</span>` : ''}
+        </div>
+        ${gapPct != null ? `<div class="re-gap ${gapPct > 0 ? 'pos' : 'neg'}">פער משוק: ${gapPct}%</div>` : ''}
+        <div class="re-flags">${flags.map(f => `<span class="re-flag ${f.severity || 'low'}">${escapeHtml(f.flag || f)}</span>`).join('')}</div>
+        ${r.rationale_he ? `<div class="re-rationale">${escapeHtml(r.rationale_he)}</div>` : ''}
+        ${r.url ? `<a class="re-link" href="${escapeHtml(r.url)}" target="_blank" rel="noopener">לצפייה במודעה ↗</a>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function translateUse(use) {
+  return { residence: 'למגורים', investment: 'להשקעה', either: 'גמיש', unclear: 'לא ברור' }[use] || use;
+}
+function formatMoney(v) {
+  if (v == null) return 'מחיר לא ידוע';
+  return '₪' + Number(v).toLocaleString('he-IL');
+}
+function safeJson(v, fallback) {
+  if (Array.isArray(v)) return v;
+  if (typeof v !== 'string') return fallback;
+  try { return JSON.parse(v); } catch { return fallback; }
+}
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+document.getElementById('re-refresh').addEventListener('click', fetchListings);
+
+// ---------- Boot ----------
+activateTab(localStorage.getItem('jarvisHub.lastTab') || 'astrology');
+</script>
+</body>
+</html>
