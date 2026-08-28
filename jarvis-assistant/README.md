@@ -27,15 +27,17 @@ someone's zodiac sign).
 
 ```
 jarvis-assistant/
+├── package.json / package-lock.json  ← your original lockfile (magnet-studio), reused as-is
+├── vercel.json                  ← lets Vercel run server.js as one serverless function
+├── api/
+│   └── index.js                 ← Vercel entrypoint (re-exports the Express app)
 ├── web/
 │   ├── index.html              ← the portal (open this in a browser)
 │   └── tools/
 │       ├── astrology.html      ← your original astrology app, unmodified
 │       └── hebrew-calendar.html← your original Hebrew calendar app, unmodified
 ├── server/
-│   ├── server.js               ← Express: serves web/ + a small @hebcal/core API
-│   ├── package.json
-│   └── package-lock.json       ← your original lockfile (magnet-studio), reused as-is
+│   └── server.js               ← Express: serves web/ + a small @hebcal/core API
 ├── db/
 │   └── schema.sql              ← Postgres schema for the DiraFinder tables
 └── n8n/
@@ -45,7 +47,7 @@ jarvis-assistant/
 ## 1. Run the local server (portal + Hebrew calendar API)
 
 ```bash
-cd jarvis-assistant/server
+cd jarvis-assistant
 npm install
 npm start
 ```
@@ -57,6 +59,24 @@ while building this:
   flags, holidays, parsha (accurate, via `@hebcal/core`).
 - `GET /api/holidays?start=...&end=...` → holidays/parshiot in a range.
 - `GET /api/zodiac?date=1990-03-25` → zodiac sign + short traits.
+
+### Deploy it to Vercel (recommended — gets you a public URL + auto-deploy on push)
+
+The repo is already wired for zero-config Vercel deploys (`vercel.json` +
+`api/index.js` route every request to the Express app in `server/server.js`).
+To deploy:
+
+1. On https://vercel.com → **Add New… → Project → Import Git Repository**
+   → pick `devopsdevopshaim-wq/hint`.
+2. Under **Root Directory**, click Edit and set it to `jarvis-assistant`
+   (important — this is a monorepo, the rest of the repo is an unrelated
+   linter project).
+3. Framework Preset: "Other". Leave build/install commands as default
+   (Vercel auto-detects `npm install` from `package.json`).
+4. Deploy. You'll get a URL like `https://<project>.vercel.app` serving the
+   whole portal, plus `/api/hebrew-date`, `/api/holidays`, `/api/zodiac`.
+5. Every future push to this branch (or whichever branch you connect)
+   redeploys automatically.
 
 Deploy this anywhere Node runs (it's a plain Express app — Render, Fly.io,
 a VPS, a container next to your n8n instance, etc.). Whatever URL you deploy

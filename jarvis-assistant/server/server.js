@@ -201,9 +201,16 @@ app.get('/api/zodiac', (req, res) => {
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
-app.listen(PORT, () => {
-  console.log(`JARVIS Hub server listening on http://localhost:${PORT}`);
-  console.log(`  Portal:        http://localhost:${PORT}/`);
-  console.log(`  Hebrew date:   http://localhost:${PORT}/api/hebrew-date?date=2026-08-28`);
-  console.log(`  Holidays:      http://localhost:${PORT}/api/holidays`);
-});
+// Vercel imports this module as a serverless function (see ../api/index.js)
+// and calls the exported app directly — it must not also call listen().
+// Running locally (`npm start`) still starts a normal server.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`JARVIS Hub server listening on http://localhost:${PORT}`);
+    console.log(`  Portal:        http://localhost:${PORT}/`);
+    console.log(`  Hebrew date:   http://localhost:${PORT}/api/hebrew-date?date=2026-08-28`);
+    console.log(`  Holidays:      http://localhost:${PORT}/api/holidays`);
+  });
+}
+
+export default app;

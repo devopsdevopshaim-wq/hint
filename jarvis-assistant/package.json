@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "JARVIS Hub backend — serves the unified portal (web/) and a small accurate Hebrew-calendar API (@hebcal/core) consumed by both the website and the n8n workflow.",
   "type": "module",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server/server.js"
   },
   "dependencies": {
     "@hebcal/core": "^6.9.2",
