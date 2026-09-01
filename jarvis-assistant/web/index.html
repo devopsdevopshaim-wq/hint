@@ -18,14 +18,24 @@
     --text: #22263a;
     --muted: #6b7280;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { overflow-x: hidden; }
   body {
     font-family: 'Segoe UI', 'Heebo', sans-serif;
     background: linear-gradient(135deg, #0c2461 0%, #1a237e 45%, #6a11cb 100%);
     min-height: 100vh;
+    min-height: 100dvh;
     color: var(--text);
   }
-  .shell { max-width: 1500px; margin: 0 auto; padding: 20px; }
+  .shell {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
   header.app-header {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.15);
@@ -95,6 +105,7 @@
   iframe.tool-frame {
     width: 100%;
     height: 85vh;
+    height: 85svh; /* mobile-browser-chrome-aware viewport height, falls back to vh above */
     border: 0;
     display: block;
   }
@@ -109,7 +120,8 @@
   }
   .re-toolbar label { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
   .re-toolbar input, .re-toolbar select {
-    width: 100%; padding: 10px 12px; border-radius: 10px; border: 2px solid #e1e5e9; font-size: .95rem;
+    /* 16px minimum: below that, iOS Safari auto-zooms the page on focus */
+    width: 100%; padding: 10px 12px; border-radius: 10px; border: 2px solid #e1e5e9; font-size: 16px;
   }
   .re-toolbar .re-actions { display: flex; align-items: flex-end; gap: 10px; }
   .btn {
@@ -158,7 +170,12 @@
   .re-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
 
   /* ---- JARVIS tab ---- */
-  #view-jarvis { padding: 26px; height: 85vh; display: flex; flex-direction: column; }
+  /* NOTE: display must stay scoped to `.active` (below) — an unconditional
+     `display: flex` here would out-specificity `.tab-view { display: none }`
+     (an ID selector beats a class selector) and show this tab even when
+     another tab is active, sitting invisibly-ish under/after it. */
+  #view-jarvis { padding: 26px; height: 85vh; flex-direction: column; }
+  #view-jarvis.active { display: flex; }
   #jarvis-config-note {
     background: #fff3cd; border: 1px solid #ffe08a; color: #7a5b00;
     padding: 14px 18px; border-radius: 10px; margin-bottom: 16px; font-size: .9rem;
@@ -179,10 +196,27 @@
   .modal-box p.hint { font-size: .85rem; color: var(--muted); margin-bottom: 20px; }
   .field { margin-bottom: 16px; }
   .field label { display: block; font-weight: 600; margin-bottom: 6px; font-size: .9rem; }
-  .field input { width: 100%; padding: 10px 12px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: .9rem; direction: ltr; text-align: right; }
+  .field input { width: 100%; padding: 10px 12px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; direction: ltr; text-align: right; }
   .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
 
   footer.app-footer { text-align: center; color: rgba(255,255,255,0.8); padding: 24px 10px; font-size: .85rem; }
+
+  /* ---- Small phones (iPhone SE/mini through standard Android widths) ---- */
+  @media (max-width: 480px) {
+    .shell { padding: 12px; padding-top: max(12px, env(safe-area-inset-top)); padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+    header.app-header { padding: 16px 18px; border-radius: 14px; gap: 10px; }
+    header.app-header h1 { font-size: 1.4rem; }
+    header.app-header p { font-size: .82rem; }
+    .gear-btn { width: 40px; height: 40px; font-size: 1.1rem; flex-shrink: 0; }
+    nav.tabs { margin: 16px 0; gap: 8px; }
+    nav.tabs button { flex-basis: 100%; padding: 13px 10px; font-size: 1rem; }
+    main.panel { border-radius: 14px; }
+    #view-realestate { padding: 14px; }
+    .re-toolbar { grid-template-columns: 1fr 1fr; }
+    #view-jarvis { padding: 14px; height: 88svh; height: 88vh; }
+    .modal-box { padding: 18px; border-radius: 14px; }
+    .re-card { padding: 14px; }
+  }
 </style>
 </head>
 <body>
@@ -242,7 +276,7 @@
     </section>
 
     <section class="tab-view" id="view-jarvis">
-      <div id="jarvis-config-note">
+      <div id="jarvis-config-note" data-default-text="כדי להפעיל את הצ'אט, פתחו את ההגדרות (⚙️) והזינו את כתובת ה-Webhook של ה-Chat Trigger מתוך זרימת ה-n8n המאוחדת.">
         כדי להפעיל את הצ'אט, פתחו את ההגדרות (⚙️) והזינו את כתובת ה-Webhook של ה-Chat Trigger מתוך זרימת ה-n8n המאוחדת.
       </div>
       <div id="jarvis-chat-mount"></div>
@@ -272,7 +306,11 @@
 </div>
 
 <script type="module">
-import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+// NOTE: @n8n/chat is loaded lazily (inside startJarvisChat), not imported at
+// the top of this module. A static top-level `import` from a CDN blocks the
+// ENTIRE module — including tab switching and the iframe tools — if that
+// CDN is ever slow, blocked, or offline (flaky mobile data, an ad-blocker,
+// a corporate proxy). Loading it on demand means a JARVIS-tab-only failure.
 
 const CONFIG_KEY = 'jarvisHub.config';
 
@@ -324,28 +362,35 @@ document.getElementById('cfg-save').addEventListener('click', () => {
 });
 
 // ---------- JARVIS chat ----------
-function startJarvisChat() {
+async function startJarvisChat() {
   const note = document.getElementById('jarvis-config-note');
-  if (!config.jarvisWebhook) { note.style.display = 'block'; return; }
+  if (!config.jarvisWebhook) { note.style.display = 'block'; note.textContent = note.dataset.defaultText; return; }
   note.style.display = 'none';
   if (chatStarted) return;
   chatStarted = true;
-  createChat({
-    webhookUrl: config.jarvisWebhook,
-    target: '#jarvis-chat-mount',
-    mode: 'fullscreen',
-    showWelcomeScreen: false,
-    initialMessages: ['שלום, אני JARVIS. איך אפשר לעזור?'],
-    i18n: {
-      en: {
-        title: 'JARVIS',
-        subtitle: 'העוזר האישי החכם שלך — זמין 24/7',
-        footer: '',
-        getStarted: 'התחל שיחה',
-        inputPlaceholder: 'כתוב את השאלה שלך...',
+  try {
+    const { createChat } = await import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js');
+    createChat({
+      webhookUrl: config.jarvisWebhook,
+      target: '#jarvis-chat-mount',
+      mode: 'fullscreen',
+      showWelcomeScreen: false,
+      initialMessages: ['שלום, אני JARVIS. איך אפשר לעזור?'],
+      i18n: {
+        en: {
+          title: 'JARVIS',
+          subtitle: 'העוזר האישי החכם שלך — זמין 24/7',
+          footer: '',
+          getStarted: 'התחל שיחה',
+          inputPlaceholder: 'כתוב את השאלה שלך...',
+        },
       },
-    },
-  });
+    });
+  } catch (err) {
+    chatStarted = false; // allow retry when the tab is reopened
+    note.style.display = 'block';
+    note.textContent = 'לא הצלחתי לטעון את רכיב הצ׳אט (בעיית רשת/CDN). בדוק את החיבור לאינטרנט ונסה לפתוח את הטאב הזה שוב.';
+  }
 }
 
 // ---------- DiraFinder listings ----------

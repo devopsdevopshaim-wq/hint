@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>לוח שנה עברי מדויק - עם פרשות וחגים</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Suez+One&display=swap" rel="stylesheet">
+    <!-- Loaded non-blocking (media="print" trick): a stylesheet <link> in
+         <head> otherwise blocks execution of any script that comes after it
+         in the document. On a slow/blocked connection (e.g. flaky mobile
+         data, or a corporate proxy blocking these CDNs) that hangs the
+         entire calendar app before its own script ever runs. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Suez+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <style>
         :root {
             --primary: #1a237e;

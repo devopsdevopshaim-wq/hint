@@ -9,7 +9,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דפדפן אסטרולוגיה מתקדם - פירושים מלאים ותחזיות</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- defer: don't let a slow/blocked CDN pause HTML parsing (only needed
+         once the user clicks "calculate", not for the initial page paint) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <style>
         :root {
             --primary: #6a11cb;
@@ -523,6 +525,16 @@
 
         .debug-toggle.active {
             background: var(--accent);
+        }
+
+        /* Mobile: the performance/telemetry overlay is a debug aid, not
+           core UX — it was overlapping the header on narrow screens, so
+           hide it there. The activity log also gets a responsive width
+           instead of a fixed 350px that could overflow small phones. */
+        @media (max-width: 600px) {
+            .performance-indicator { display: none; }
+            .activity-logger { width: calc(100% - 40px); right: 20px; left: 20px; }
+            .update-indicator { font-size: 0.85rem; padding: 8px 14px; }
         }
     </style>
 </head>
@@ -1981,8 +1993,7 @@
                         text: "נסיעות יכולות להביא תובנות רוחניות חשובות. על פי הקבלה, כל מקום חדש הוא הזדמנות לצמיחה והתפתחות.",
                         source: "קבלה"
                     }
-                ]
-            },
+                ],
 
             // תחזיות לפי תקופות - ספציפיות לכל מזל
             // eslint-disable-next-line
