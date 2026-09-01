@@ -234,7 +234,7 @@
       <p>אסטרולוגיה · לוח שנה עברי · DiraFinder נדל"ן · הצ'אט האישי שלך — הכל במקום אחד, מסונכרן דרך n8n</p>
     </div>
     <div style="display:flex; align-items:center; gap:10px;">
-      <button class="btn" id="installAppBtn" style="display:none;">📲 התקן אפליקציה</button>
+      <button class="btn" id="installAppBtn">📲 התקן אפליקציה</button>
       <button class="gear-btn" id="openSettingsBtn" title="הגדרות חיבור">⚙️</button>
     </div>
   </header>
@@ -311,6 +311,24 @@
     <div class="modal-actions">
       <button class="btn secondary" id="cfg-cancel">ביטול</button>
       <button class="btn" id="cfg-save">שמור</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="installHelpModal">
+  <div class="modal-box">
+    <h2>📲 הוספה למסך הבית</h2>
+    <p class="hint">בדפדפן הזה ההתקנה האוטומטית עדיין לא זמינה (זה תלוי בדפדפן/במכשיר) — אבל אפשר להוסיף ידנית באותה תוצאה בדיוק:</p>
+    <div class="field">
+      <label>באנדרואיד (Chrome)</label>
+      <p style="font-size:.9rem; color:#444; line-height:1.6;">תפריט שלוש הנקודות (⋮) בפינה הימנית העליונה ← <b>"התקן אפליקציה"</b> או <b>"הוסף למסך הבית"</b>.</p>
+    </div>
+    <div class="field">
+      <label>ב-iPhone (Safari)</label>
+      <p style="font-size:.9rem; color:#444; line-height:1.6;">כפתור השיתוף ⬆️ למטה ← <b>"הוסף למסך הבית"</b>.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="installHelpClose">הבנתי</button>
     </div>
   </div>
 </div>
@@ -503,26 +521,36 @@ if ('serviceWorker' in navigator) {
 }
 
 const installBtn = document.getElementById('installAppBtn');
+const installHelpModal = document.getElementById('installHelpModal');
 let deferredInstallPrompt = null;
 
 // Chrome/Android fires this only when its own install criteria are met
-// (manifest + active service worker + served over HTTPS/localhost). We
-// stash the event and show our own button instead of Chrome's mini-bar,
-// so "install" is one visible tap rather than something buried in a menu.
+// (manifest + active service worker + served over HTTPS/localhost, plus
+// some engagement on the site) — timing is entirely up to the browser.
+// We just stash it for whenever the button is actually clicked.
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  installBtn.style.display = 'inline-flex';
 });
 
 installBtn.addEventListener('click', async () => {
-  if (!deferredInstallPrompt) return;
-  installBtn.disabled = true;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice; // resolves once the user picks install/cancel
-  deferredInstallPrompt = null;
-  installBtn.style.display = 'none';
-  installBtn.disabled = false;
+  if (deferredInstallPrompt) {
+    // The real thing: Android's native install dialog, right now.
+    installBtn.disabled = true;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    installBtn.disabled = false;
+  } else {
+    // Chrome hasn't handed us the native prompt yet (still deciding, or
+    // this isn't Chrome/Android) — show exactly what to tap instead of
+    // just doing nothing.
+    installHelpModal.classList.add('active');
+  }
+});
+
+document.getElementById('installHelpClose').addEventListener('click', () => {
+  installHelpModal.classList.remove('active');
 });
 
 window.addEventListener('appinstalled', () => {
