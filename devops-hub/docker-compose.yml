@@ -1,0 +1,42 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_SECURE_COOKIE=false
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-UTC}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - devops-hub-net
+
+  devops-hub:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # devops-hub calls n8n's API over the internal docker network...
+      - N8N_BASE_URL=http://n8n:5678
+      # ...but the "open in n8n" link handed to the browser needs the
+      # host-reachable address instead (see .env.example).
+      - N8N_EDITOR_URL=http://localhost:5678
+      - N8N_API_KEY=${N8N_API_KEY:-}
+    depends_on:
+      - n8n
+    networks:
+      - devops-hub-net
+
+volumes:
+  n8n_data:
+
+networks:
+  devops-hub-net:
+    driver: bridge

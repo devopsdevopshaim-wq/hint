@@ -53,51 +53,79 @@ export default function QuestionWizard({ onComplete }: QuestionWizardProps) {
     }
 
     return (
-        <div className="card">
-            <div className="progress">
-                שאלה {stepIndex + 1} מתוך {QUESTIONS.length}
-            </div>
-            <h2>{question.text}</h2>
-            {question.helpText && <p style={{ color: "var(--muted)" }}>{question.helpText}</p>}
-
-            {question.type === "text" ? (
-                <input
-                    type="text"
-                    placeholder={question.placeholder}
-                    value={(currentValue as string) ?? ""}
-                    onChange={(e) => setText(e.target.value)}
-                />
-            ) : (
-                <div className="options">
-                    {question.options?.map((option) => {
-                        const selected = question.type === "multi"
-                            ? Array.isArray(currentValue) && currentValue.includes(option.value)
-                            : currentValue === option.value;
-                        return (
-                            <div
-                                key={option.value}
-                                className={`option${selected ? " selected" : ""}`}
-                                onClick={() => (question.type === "multi" ? toggleMulti(option.value) : selectSingle(option.value))}
-                            >
-                                <input
-                                    type={question.type === "multi" ? "checkbox" : "radio"}
-                                    checked={selected}
-                                    readOnly
-                                />
-                                <span>{option.label}</span>
-                            </div>
-                        );
-                    })}
+        <div className="terminal">
+            <div className="terminal-titlebar">
+                <div className="terminal-dots">
+                    <span /><span /><span />
                 </div>
-            )}
+                <span className="path">devops-hub — project-wizard — [{question.domain}]</span>
+            </div>
 
-            <div className="actions">
-                <button className="secondary" onClick={back} disabled={stepIndex === 0}>
-                    הקודם
-                </button>
-                <button className="primary" onClick={next} disabled={!canProceed}>
-                    {isLast ? "צור תוכנית" : "הבא"}
-                </button>
+            <div className="terminal-body">
+                <div className="prompt-line">
+                    $ devops-hub init --step {stepIndex + 1}/{QUESTIONS.length}
+                    <span className="caret" />
+                </div>
+
+                <div className="step-label">
+                    <span>שאלה {stepIndex + 1} מתוך {QUESTIONS.length}</span>
+                    <span className="domain-tag">{question.domain}</span>
+                </div>
+                <h2>{question.text}</h2>
+                {question.helpText && <p style={{ color: "var(--muted)", fontSize: 14 }}>{question.helpText}</p>}
+
+                {question.type === "text" ? (
+                    <input
+                        type="text"
+                        placeholder={question.placeholder}
+                        value={(currentValue as string) ?? ""}
+                        onChange={(e) => setText(e.target.value)}
+                    />
+                ) : (
+                    <div className="options">
+                        {question.options?.map((option) => {
+                            const selected = question.type === "multi"
+                                ? Array.isArray(currentValue) && currentValue.includes(option.value)
+                                : currentValue === option.value;
+                            return (
+                                <div
+                                    key={option.value}
+                                    className={`option${selected ? " selected" : ""}`}
+                                    onClick={() => (question.type === "multi" ? toggleMulti(option.value) : selectSingle(option.value))}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                            e.preventDefault();
+                                            question.type === "multi" ? toggleMulti(option.value) : selectSingle(option.value);
+                                        }
+                                    }}
+                                >
+                                    <span className="marker">{selected ? "❯" : "·"}</span>
+                                    <span>{option.label}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+
+                <div className="pipeline">
+                    {QUESTIONS.map((q, i) => (
+                        <div key={q.id} style={{ display: "flex", alignItems: "center", flex: i < QUESTIONS.length - 1 ? 1 : undefined }}>
+                            <div className={`node${i < stepIndex ? " done" : i === stepIndex ? " active" : ""}`} />
+                            {i < QUESTIONS.length - 1 && <div className={`wire${i < stepIndex ? " done" : ""}`} />}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="actions">
+                    <button className="secondary" onClick={back} disabled={stepIndex === 0}>
+                        ‹ הקודם
+                    </button>
+                    <button className="primary" onClick={next} disabled={!canProceed}>
+                        {isLast ? "הרץ pipeline ▸" : "הבא ›"}
+                    </button>
+                </div>
             </div>
         </div>
     );

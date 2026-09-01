@@ -42,15 +42,25 @@ export default function HomePage() {
     return (
         <main>
             <div className="header">
-                <h1>DevOps Hub</h1>
-                <p>שאלון DevOps מבוסס AI שמייצר תוכנית פרויקט, קבצי סקאפולד ו-workflow אוטומציה ל-n8n</p>
+                <h1>שאלון אחד. <span className="accent">pipeline</span> שלם.</h1>
+                <p>ענו על שאלון DevOps קצר וקבלו תוכנית פרויקט, קבצי סקאפולד מוכנים, ו-workflow אוטומציה שנפרס ישירות למופע n8n שלכם.</p>
             </div>
 
             {view === "wizard" && <QuestionWizard onComplete={handleComplete} />}
 
             {view === "loading" && (
-                <div className="card">
-                    <p>סוכני ה-AI בונים עבורכם תוכנית, סקאפולד ו-workflow ל-n8n...</p>
+                <div className="terminal">
+                    <div className="terminal-titlebar">
+                        <div className="terminal-dots"><span /><span /><span /></div>
+                        <span className="path">devops-hub — running agent pipeline</span>
+                    </div>
+                    <div className="terminal-body">
+                        <div className="prompt-line">
+                            $ planner-agent → scaffold-agent → n8n-workflow-agent
+                            <span className="caret" />
+                        </div>
+                        <p style={{ color: "var(--muted)" }}>סוכני ה-AI בונים עבורכם תוכנית, סקאפולד ו-workflow ל-n8n...</p>
+                    </div>
                 </div>
             )}
 

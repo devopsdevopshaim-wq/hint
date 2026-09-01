@@ -23,6 +23,13 @@ export interface DeployedWorkflow {
  * Pushes a generated workflow into a real n8n instance via its REST API.
  * Requires N8N_BASE_URL (e.g. https://n8n.example.com) and N8N_API_KEY to
  * be configured in the environment.
+ *
+ * N8N_BASE_URL is the address devops-hub itself uses to reach n8n's API
+ * (e.g. the docker-network hostname `http://n8n:5678`). N8N_EDITOR_URL is
+ * optional and overrides only the browser-facing link returned to the
+ * user, for setups where the API address and the address a human opens in
+ * a browser differ (e.g. docker-compose, where "n8n" doesn't resolve on
+ * the host). It falls back to N8N_BASE_URL when unset.
  */
 export async function deployWorkflowToN8n(workflow: N8nWorkflowSpec): Promise<DeployedWorkflow> {
     const baseUrl = process.env.N8N_BASE_URL;
@@ -33,6 +40,7 @@ export async function deployWorkflowToN8n(workflow: N8nWorkflowSpec): Promise<De
     }
 
     const normalizedBaseUrl = baseUrl.replace(/\/$/, "");
+    const editorBaseUrl = (process.env.N8N_EDITOR_URL ?? baseUrl).replace(/\/$/, "");
 
     const response = await fetch(`${normalizedBaseUrl}/api/v1/workflows`, {
         method: "POST",
@@ -58,6 +66,6 @@ export async function deployWorkflowToN8n(workflow: N8nWorkflowSpec): Promise<De
 
     return {
         id: created.id,
-        editorUrl: `${normalizedBaseUrl}/workflow/${created.id}`
+        editorUrl: `${editorBaseUrl}/workflow/${created.id}`
     };
 }
