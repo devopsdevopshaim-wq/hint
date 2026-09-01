@@ -28,9 +28,11 @@ someone's zodiac sign).
 ```
 jarvis-assistant/
 ├── package.json / package-lock.json  ← your original lockfile (magnet-studio), reused as-is
-├── vercel.json                  ← lets Vercel run server.js as one serverless function
+├── vercel.json                  ← tells Vercel the static site lives in web/
 ├── api/
-│   └── index.js                 ← Vercel entrypoint (re-exports the Express app)
+│   ├── hebrew-date.js            ← Vercel functions (native, not Express-wrapped —
+│   ├── holidays.js                 an earlier Express-wrapper version crashed at
+│   └── zodiac.js                   runtime on Vercel with FUNCTION_INVOCATION_FAILED)
 ├── web/
 │   ├── index.html              ← the portal (open this in a browser)
 │   └── tools/
@@ -62,8 +64,12 @@ while building this:
 
 ### Deploy it to Vercel (recommended — gets you a public URL + auto-deploy on push)
 
-The repo is already wired for zero-config Vercel deploys (`vercel.json` +
-`api/index.js` route every request to the Express app in `server/server.js`).
+The repo is already wired for zero-config Vercel deploys: `vercel.json` sets
+`outputDirectory: "web"` (so the portal is served as static files at the
+site's root), and `api/hebrew-date.js` / `api/holidays.js` / `api/zodiac.js`
+are auto-detected by Vercel as serverless functions — no Express wrapper,
+just Vercel's own native `export default function handler(req, res)`
+convention, which is what actually runs reliably on Vercel's infrastructure.
 To deploy:
 
 1. On https://vercel.com → **Add New… → Project → Import Git Repository**
