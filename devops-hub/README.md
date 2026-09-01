@@ -1,5 +1,15 @@
 # DevOps Hub
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdevopsdevopshaim-wq%2Fhint&root-directory=devops-hub&project-name=devops-hub&repository-name=devops-hub&env=ANTHROPIC_API_KEY,N8N_BASE_URL,N8N_API_KEY,N8N_EDITOR_URL&envDescription=ANTHROPIC_API_KEY%20is%20optional.%20N8N_BASE_URL%2FN8N_API_KEY%20are%20needed%20for%20the%20%22Deploy%20to%20n8n%22%20button%20to%20work.&envLink=https%3A%2F%2Fgithub.com%2Fdevopsdevopshaim-wq%2Fhint%2Fblob%2Fmain%2Fdevops-hub%2F.env.example)
+
+לחיצה על הכפתור פותחת ב-Vercel אשף import מוכן מראש: ה-**root directory**
+כבר מוגדר ל-`devops-hub` (חשוב! זה מונו-רפו וקוד ה-Next.js לא נמצא בשורש
+ה-repo), ומבוקשים ממכם ערכי משתני הסביבה הרלוונטיים לפני הדיפלוי הראשון.
+צריך רק חשבון Vercel (מתחברים עם GitHub) ולמלא את `N8N_BASE_URL` /
+`N8N_API_KEY` מ-n8n Cloud שלכם - `ANTHROPIC_API_KEY` אופציונלי.
+
+---
+
 מערכת המאגדת ידע DevOps לתוך שאלון אינטראקטיבי: המשתמש עונה על סדרת שאלות
 (ענן, קונטיינרים, CI/CD, ניטור, ניהול סודות, שילובי AI וכו') ומקבל בתמורה:
 
