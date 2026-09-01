@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useCallback, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 
 import { Config as ConfigData, ErrorData, Results as ResultsData } from '../../shared/types';
 
@@ -101,6 +102,7 @@ const App = (props: Props) => {
         <div className={styles.root} data-theme={theme}>
             {getCurrentPage()}
             {isAnalyzing && <Analyze config={config} onCancel={onCancel} onError={onError} onResults={onResults} onTimeout={onTimeout} />}
+            <Analytics />
         </div>
     );
 };
