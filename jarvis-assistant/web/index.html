@@ -4,7 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JARVIS Hub — המרכז האישי המאוחד שלך</title>
-<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a237e">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<!-- media="print"/onload trick: don't let a slow/blocked CDN stylesheet
+     delay this page's own script from running (see sw.js / the fix in
+     tools/hebrew-calendar.html for why this matters on flaky mobile data) -->
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root {
     --primary: #1a237e;
@@ -484,6 +491,13 @@ function escapeHtml(s) {
 }
 
 document.getElementById('re-refresh').addEventListener('click', fetchListings);
+
+// ---------- PWA install (Android/Chrome "Add to Home screen") ----------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {}); // best-effort
+  });
+}
 
 // ---------- Boot ----------
 activateTab(localStorage.getItem('jarvisHub.lastTab') || 'astrology');
