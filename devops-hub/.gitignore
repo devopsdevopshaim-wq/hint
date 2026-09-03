@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+
+# The repo root .gitignore (webhint's, this is a monorepo) ignores
+# package-lock.json everywhere since that project uses yarn. devops-hub
+# uses npm, so un-ignore its lockfile for reproducible installs/deploys.
+!/package-lock.json
