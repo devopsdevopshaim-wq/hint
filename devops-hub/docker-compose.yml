@@ -1,0 +1,47 @@
+services:
+  devops-hub:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # Point these at your n8n Cloud instance (Settings -> API in n8n),
+      # e.g. https://your-instance.app.n8n.cloud. N8N_EDITOR_URL only
+      # needs to differ from N8N_BASE_URL when using the optional
+      # self-hosted n8n service below (see .env.example).
+      - N8N_BASE_URL=${N8N_BASE_URL:-}
+      - N8N_EDITOR_URL=${N8N_EDITOR_URL:-}
+      - N8N_API_KEY=${N8N_API_KEY:-}
+    networks:
+      - devops-hub-net
+
+  # Optional: run your own n8n instead of n8n Cloud. Not started by
+  # default - run `docker compose --profile self-hosted-n8n up -d` and
+  # point N8N_BASE_URL at http://n8n:5678 / N8N_EDITOR_URL at
+  # http://localhost:5678 (or your domain) in .env instead.
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    profiles:
+      - self-hosted-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_SECURE_COOKIE=false
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-UTC}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - devops-hub-net
+
+volumes:
+  n8n_data:
+
+networks:
+  devops-hub-net:
+    driver: bridge
